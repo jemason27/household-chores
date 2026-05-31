@@ -13,9 +13,11 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23E8620A' rx='40'/%3E%3Cpath d='M90 35 L148 82 L148 152 L110 152 L110 114 L70 114 L70 152 L32 152 L32 82 Z' fill='white'/%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
-.app{max-width:780px;margin:0 auto;padding:1.5rem 1rem}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:780px;margin:0 auto}
+.header{flex-shrink:0;background:#f5f5f5;padding:1rem 1rem 0;z-index:10}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .logo{display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .logo-icon{width:36px;height:36px;border-radius:9px;background:#E8620A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;transition:opacity .15s}
 .logo:active .logo-icon{opacity:.7}
@@ -24,7 +26,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .who-toggle{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff}
 .who-btn{padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;border:none;color:#666;transition:all .15s}
 .who-btn.active{background:#E8620A;color:#fff}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 .stat{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #eee}
 .stat-label{font-size:11px;color:#888;margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:600;color:#1a1a1a;line-height:1}
@@ -35,6 +37,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tabs{display:flex;gap:4px;margin-bottom:1rem}
 .tab{flex:1;padding:6px 2px;border-radius:8px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s;text-align:center;white-space:nowrap}
 .tab.active{background:#E8620A;color:#fff;border-color:#E8620A}
+.content{flex:1;overflow-y:auto;padding:0 1rem 1.5rem;-webkit-overflow-scrolling:touch}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem}
 .tab-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa}
 .tab-toolbar-label{font-size:12px;color:#888}
@@ -129,7 +132,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .reward-row:last-of-type{border-bottom:none}
 .reward-name{font-size:13px;font-weight:500;color:#1a1a1a}
 .reward-cost{font-size:11px;color:#888;margin-top:2px}
-.redeem-btn{padding:6px 14px;border-radius:8px;border:none;background:#E8620A;color:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.redeem-btn{padding:6px 14px;border-radius:8px;border:none;background:#E8620A;color:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
 .redeem-btn:hover{opacity:.85}
 .redeem-btn:disabled{background:#eee;color:#bbb;cursor:not-allowed;opacity:1}
 .rewards-reset-row{padding:12px 16px;border-top:1px solid #f0f0f0;text-align:center}
@@ -138,7 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cp{position:absolute;width:8px;height:8px;border-radius:2px;animation:cfal 1.3s ease-out forwards}
 @keyframes cfal{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(130px) rotate(720deg);opacity:0}}
 @media(max-width:600px){
-  .app{padding:1rem .75rem}
+  .header{padding:.75rem .75rem 0}
   .stats{grid-template-columns:repeat(3,1fr);gap:6px}
   .stat{padding:10px 8px}
   .stat-val{font-size:17px}
@@ -146,6 +149,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .stat-label{font-size:10px}
   .stat-sub{font-size:10px}
   .tab{font-size:10px;padding:5px 1px}
+  .content{padding:0 .75rem 1.5rem}
   .d-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 58px 26px}
   .w-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 58px 26px}
   .m-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 66px 26px}
@@ -159,45 +163,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .add-select{padding:7px 6px;font-size:11px}
   .add-btn{padding:7px 10px;font-size:11px}
   .log-row .hide-mobile{display:none}
-  .l-grid{grid-template-columns:62px minmax(0,1fr) 58px 36px}
 }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="topbar">
-    <div class="logo" onclick="refreshData()">
-      <div class="logo-icon"><i class="ti ti-home"></i></div>
-      <div><div class="app-title">Mason Household</div><div class="app-sub">Tap house to refresh</div></div>
+  <div class="header">
+    <div class="topbar">
+      <div class="logo" onclick="refreshData()">
+        <div class="logo-icon"><i class="ti ti-home"></i></div>
+        <div><div class="app-title">Mason Household</div><div class="app-sub">Tap house to refresh</div></div>
+      </div>
+      <div class="who-toggle">
+        <button class="who-btn" id="who-all" onclick="setWho('All',this)">All</button>
+        <button class="who-btn" id="who-jake" onclick="setWho('Jake',this)">Jake</button>
+        <button class="who-btn" id="who-marysa" onclick="setWho('Marysa',this)">Marysa</button>
+      </div>
     </div>
-    <div class="who-toggle">
-      <button class="who-btn active" onclick="setWho('All',this)">All</button>
-      <button class="who-btn" onclick="setWho('Jake',this)">Jake</button>
-      <button class="who-btn" onclick="setWho('Marysa',this)">Marysa</button>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Today</div><div class="stat-val" id="s-today-pct">—</div><div class="stat-sub" id="s-today-sub"></div></div>
+      <div class="stat"><div class="stat-label">This week</div><div class="stat-val" id="s-week-pct">—</div><div class="stat-sub" id="s-week-sub"></div></div>
+      <div class="stat stat-pts"><div class="stat-label" id="pts-label">Your pts</div><div class="stat-val" id="s-pts">—</div><div class="stat-sub">50 to redeem</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('daily',this)">Daily</button>
+      <button class="tab" onclick="showTab('weekly',this)">Weekly</button>
+      <button class="tab" onclick="showTab('monthly',this)">Monthly</button>
+      <button class="tab" onclick="showTab('occasional',this)">Occasional</button>
+      <button class="tab" onclick="showTab('rewards',this)">Rewards</button>
+      <button class="tab" onclick="showTab('activity',this)">Activity</button>
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-label">Today</div><div class="stat-val" id="s-today-pct">—</div><div class="stat-sub" id="s-today-sub"></div></div>
-    <div class="stat"><div class="stat-label">This week</div><div class="stat-val" id="s-week-pct">—</div><div class="stat-sub" id="s-week-sub"></div></div>
-    <div class="stat stat-pts"><div class="stat-label" id="pts-label">Your pts</div><div class="stat-val" id="s-pts">—</div><div class="stat-sub">50 to redeem</div></div>
+  <div class="content">
+    <div id="tab-daily"><div class="loading">Loading...</div></div>
+    <div id="tab-weekly" style="display:none"><div class="loading">Loading...</div></div>
+    <div id="tab-monthly" style="display:none"><div class="loading">Loading...</div></div>
+    <div id="tab-occasional" style="display:none"><div class="loading">Loading...</div></div>
+    <div id="tab-rewards" style="display:none"><div class="loading">Loading...</div></div>
+    <div id="tab-activity" style="display:none"><div class="loading">Loading...</div></div>
   </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('daily',this)">Daily</button>
-    <button class="tab" onclick="showTab('weekly',this)">Weekly</button>
-    <button class="tab" onclick="showTab('monthly',this)">Monthly</button>
-    <button class="tab" onclick="showTab('occasional',this)">Occasional</button>
-    <button class="tab" onclick="showTab('rewards',this)">Rewards</button>
-    <button class="tab" onclick="showTab('log',this)">Log</button>
-  </div>
-
-  <div id="tab-daily"><div class="loading">Loading...</div></div>
-  <div id="tab-weekly" style="display:none"><div class="loading">Loading...</div></div>
-  <div id="tab-monthly" style="display:none"><div class="loading">Loading...</div></div>
-  <div id="tab-occasional" style="display:none"><div class="loading">Loading...</div></div>
-  <div id="tab-rewards" style="display:none"><div class="loading">Loading...</div></div>
-  <div id="tab-log" style="display:none"><div class="loading">Loading...</div></div>
 </div>
 
 <div class="modal-overlay" id="modal">
@@ -240,21 +245,15 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
 const FREQ_PTS={daily:1,weekly:3,monthly:5,occasional:10};
-const REWARDS=[
-  'You pick date night','Partner picks date night','No-veto movie night',
-  'Massage','Partner does your weekly chores','No-veto week of meals',
-  'You pick the sex','$25 shopping spree'
-];
+const REWARDS=['You pick date night','Partner picks date night','No-veto movie night','Massage','Partner does your weekly chores','No-veto week of meals','You pick the sex','$25 shopping spree'];
 const REWARD_COST=50;
 const ASSIGN_ORDER={'Jake':0,'Marysa':1,'Either':2,'Both':3};
 
 let allChores=[],dailyStatus={},activeChoreId=null,activeFreq=null;
 let currentWho='All',activeTab='daily';
 let currentPerson=localStorage.getItem('mason_person')||null;
-let jakePoints=0,marysaPoints=0;
-let jakeWeekPts=0,marysaWeekPts=0;
+let jakePoints=0,marysaPoints=0,jakeWeekPts=0,marysaWeekPts=0;
 const today=new Date().toISOString().split('T')[0];
-const weekAgo=new Date(Date.now()-7*86400000).toISOString();
 
 async function api(path,method='GET',body=null){
   const opts={method,headers:{...HEADERS,'Prefer':method==='POST'?'return=representation':''}};
@@ -285,12 +284,32 @@ async function loadAll(){
     dailyStatus={};
     (statuses||[]).forEach(s=>{dailyStatus[s.chore_id]=s;});
     calcPoints(pts||[],redemptions||[]);
+    applyPersonDefaults();
     updatePtsDisplay();
     renderAll();
     renderRewards();
-    renderLog(comps||[],redemptions||[]);
+    renderActivity(comps||[],redemptions||[]);
     updateStats();
   }catch(e){showToast('Error loading data');console.error(e);}
+}
+
+function applyPersonDefaults(){
+  if(currentPerson==='Jake'){
+    currentWho='Jake';
+    document.getElementById('who-jake').classList.add('active');
+    document.getElementById('who-all').classList.remove('active');
+    document.getElementById('who-marysa').classList.remove('active');
+  } else if(currentPerson==='Marysa'){
+    currentWho='Marysa';
+    document.getElementById('who-marysa').classList.add('active');
+    document.getElementById('who-all').classList.remove('active');
+    document.getElementById('who-jake').classList.remove('active');
+  } else {
+    currentWho='All';
+    document.getElementById('who-all').classList.add('active');
+    document.getElementById('who-jake').classList.remove('active');
+    document.getElementById('who-marysa').classList.remove('active');
+  }
 }
 
 function calcPoints(pts,redemptions){
@@ -310,8 +329,7 @@ function calcPoints(pts,redemptions){
 
 function updatePtsDisplay(){
   const myPts=currentPerson==='Jake'?jakePoints:currentPerson==='Marysa'?marysaPoints:null;
-  const label=currentPerson?currentPerson+"'s pts":'Your pts';
-  document.getElementById('pts-label').textContent=label;
+  document.getElementById('pts-label').textContent=currentPerson?currentPerson+"'s pts":'Your pts';
   document.getElementById('s-pts').textContent=myPts!==null?myPts:'—';
 }
 
@@ -334,8 +352,7 @@ function pillClass(a){return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe'
 function ptsBadge(freq,done){
   const n=FREQ_PTS[freq]||1;
   const label=n===1?'+1 pt':'+'+n+' pts';
-  const op=done?'':'opacity:.35;';
-  return `<span class="pts-badge" style="${op}">${label}</span>`;
+  return `<span class="pts-badge" style="${done?'':'opacity:.35;'}">${label}</span>`;
 }
 
 function intervalLabel(days){
@@ -361,8 +378,7 @@ function toolbarHTML(label,resetFn){
 }
 
 function choreRowHTML(c,gridClass,done,metaDesktop,metaMobile,statusPill){
-  const freq=c.frequency;
-  return `<div class="chore-row ${gridClass}${done?' done':''}" onclick="toggleChore('${c.id}','${freq}')">
+  return `<div class="chore-row ${gridClass}${done?' done':''}" onclick="toggleChore('${c.id}','${c.frequency}')">
     <div class="cb${done?' on':''}"></div>
     <div class="chore-cell">
       <span class="chore-name">${esc(c.name)}</span>
@@ -370,9 +386,9 @@ function choreRowHTML(c,gridClass,done,metaDesktop,metaMobile,statusPill){
     </div>
     <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
     <span class="desktop-meta" style="font-size:12px;color:#999">${metaDesktop}</span>
-    ${ptsBadge(freq,done)}
+    ${ptsBadge(c.frequency,done)}
     ${statusPill}
-    <button class="edit-btn" onclick="openEdit(event,'${c.id}','${freq}')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    <button class="edit-btn" onclick="openEdit(event,'${c.id}','${c.frequency}')"><i class="ti ti-edit" style="font-size:13px"></i></button>
   </div>`;
 }
 
@@ -459,7 +475,7 @@ function renderOccasional(){
     const done=dailyStatus[c.id]?.done||false;
     const ld=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}):'—';
     const interval=parseInt(c.sort_order)||180;
-    const row=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
+    html+=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
       <div class="cb${done?' on':''}"></div>
       <div class="chore-cell">
         <span class="chore-name">${esc(c.name)} <span style="font-size:11px;color:#bbb">(${intervalLabel(interval)})</span></span>
@@ -471,7 +487,6 @@ function renderOccasional(){
       <span class="pill ${cls}">${label}</span>
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','occasional')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
-    html+=row;
   });
   html+=`<div class="add-row">
     <input class="add-input" id="add-occasional-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('occasional')">
@@ -495,24 +510,14 @@ function renderRewards(){
   const otherName=currentPerson==='Jake'?'Marysa':'Jake';
   const otherPts=currentPerson==='Jake'?marysaPoints:jakePoints;
   const otherWeek=currentPerson==='Jake'?marysaWeekPts:jakeWeekPts;
-
   let html='<div class="card">';
-
   if(!setupDone){
     html+=`<div class="rewards-setup">
       <div class="rewards-setup-title">Who are you on this device?</div>
       <div class="rewards-setup-sub">This is saved locally — you only need to do this once. To change it later, tap "Switch device identity" at the bottom of this tab.</div>
       <div class="setup-btns">
-        <div class="setup-btn" onclick="setPerson('Jake')">
-          <div class="setup-avatar av-j">JM</div>
-          <div class="setup-name">Jake</div>
-          <div class="setup-role">This is my phone</div>
-        </div>
-        <div class="setup-btn" onclick="setPerson('Marysa')">
-          <div class="setup-avatar av-m">MM</div>
-          <div class="setup-name">Marysa</div>
-          <div class="setup-role">This is my phone</div>
-        </div>
+        <div class="setup-btn" onclick="setPerson('Jake')"><div class="setup-avatar av-j">JM</div><div class="setup-name">Jake</div><div class="setup-role">This is my phone</div></div>
+        <div class="setup-btn" onclick="setPerson('Marysa')"><div class="setup-avatar av-m">MM</div><div class="setup-name">Marysa</div><div class="setup-role">This is my phone</div></div>
       </div>
     </div>`;
   } else {
@@ -538,25 +543,19 @@ function renderRewards(){
     });
     html+=`<div class="rewards-reset-row"><span class="rewards-reset-link" onclick="resetPerson()">Switch device identity</span></div>`;
   }
-
   html+='</div>';
   document.getElementById('tab-rewards').innerHTML=html;
 }
 
-function renderLog(comps,redemptions){
+function renderActivity(comps,redemptions){
   const allEntries=[];
-  comps.forEach(c=>{
-    allEntries.push({date:new Date(c.completed_at),chore:c.chore_name||'',person:c.completed_by||c.assigned_to||'',pts:+(FREQ_PTS[c.frequency]||1),type:'earn',freq:c.frequency});
-  });
-  redemptions.forEach(r=>{
-    allEntries.push({date:new Date(r.created_at),chore:r.reward_name,person:r.person,pts:-r.points_spent,type:'redeem',freq:null});
-  });
+  comps.forEach(c=>{allEntries.push({date:new Date(c.completed_at),chore:c.chore_name||'',person:c.completed_by||c.assigned_to||'',pts:+(FREQ_PTS[c.frequency]||1),type:'earn',freq:c.frequency});});
+  redemptions.forEach(r=>{allEntries.push({date:new Date(r.created_at),chore:r.reward_name,person:r.person,pts:-r.points_spent,type:'redeem',freq:null});});
   allEntries.sort((a,b)=>b.date-a.date);
   const shown=allEntries.slice(0,60);
-
   let html='<div class="card">';
   html+='<div class="col-head l-grid"><span>Date</span><span>Activity</span><span>Who</span><span>Pts</span><span class="hide-mobile">Type</span></div>';
-  if(!shown.length) html+='<div class="empty">No history yet</div>';
+  if(!shown.length) html+='<div class="empty">No activity yet</div>';
   shown.forEach(e=>{
     const d=e.date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
     const ptsHtml=e.pts>0?`<span class="pts-badge earned">+${e.pts}</span>`:`<span class="pts-badge spent">${e.pts}</span>`;
@@ -571,7 +570,7 @@ function renderLog(comps,redemptions){
     </div>`;
   });
   html+='</div>';
-  document.getElementById('tab-log').innerHTML=html;
+  document.getElementById('tab-activity').innerHTML=html;
 }
 
 function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasional();}
@@ -629,8 +628,8 @@ async function toggleChore(id,freq){
       if(currentPerson){
         const pts=FREQ_PTS[freq]||1;
         await api('points','POST',{person:currentPerson,amount:pts,chore_name:chore.name,frequency:freq,reason:'chore_complete'});
-        if(currentPerson==='Jake') jakePoints+=pts;
-        else marysaPoints+=pts;
+        if(currentPerson==='Jake'){jakePoints+=pts;jakeWeekPts+=pts;}
+        else{marysaPoints+=pts;marysaWeekPts+=pts;}
         updatePtsDisplay();
         if(activeTab==='rewards') renderRewards();
       }
@@ -681,14 +680,18 @@ function launchConfetti(){
 function setPerson(name){
   currentPerson=name;
   localStorage.setItem('mason_person',name);
+  applyPersonDefaults();
   updatePtsDisplay();
+  renderAll();
   renderRewards();
 }
 
 function resetPerson(){
-  if(!confirm('Switch device identity? You can re-select who you are.')) return;
+  if(!confirm('Switch device identity?')) return;
   currentPerson=null;
   localStorage.removeItem('mason_person');
+  currentWho='All';
+  applyPersonDefaults();
   updatePtsDisplay();
   renderRewards();
 }
@@ -766,23 +769,23 @@ function closeModal(){
 }
 
 function showTab(name,btn){
-  ['daily','weekly','monthly','occasional','rewards','log'].forEach(t=>{
+  ['daily','weekly','monthly','occasional','rewards','activity'].forEach(t=>{
     document.getElementById('tab-'+t).style.display=t===name?'':'none';
   });
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   activeTab=name;
   if(name==='rewards') renderRewards();
-  if(name==='log') reloadLog();
+  if(name==='activity') reloadActivity();
 }
 
-async function reloadLog(){
+async function reloadActivity(){
   try{
     const [comps,redemptions]=await Promise.all([
       api('completions?order=completed_at.desc&limit=80'),
       api('redemptions?order=created_at.desc')
     ]);
-    renderLog(comps||[],redemptions||[]);
+    renderActivity(comps||[],redemptions||[]);
   }catch(e){}
 }
 
