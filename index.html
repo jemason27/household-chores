@@ -22,7 +22,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-label{font-size:11px;color:#888;margin-bottom:4px}
 .stat-val{font-size:22px;font-weight:600;color:#1a1a1a;line-height:1}
 .stat-sub{font-size:11px;color:#aaa;margin-top:3px}
-.tabs{display:flex;gap:6px;margin-bottom:1rem}
+.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
 .tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s}
 .tab.active{background:#1F3864;color:#fff;border-color:#1F3864}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem}
@@ -30,6 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .d-grid{grid-template-columns:30px minmax(0,1fr) 90px 82px 80px 30px}
 .w-grid{grid-template-columns:30px minmax(0,1fr) 90px 90px 80px 30px}
 .m-grid{grid-template-columns:30px minmax(0,1fr) 90px 100px 92px 30px}
+.o-grid{grid-template-columns:30px minmax(0,1fr) 90px 100px 110px 30px}
 .l-grid{grid-template-columns:92px minmax(0,1fr) 90px 70px 82px}
 .sec-row{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:11px;font-weight:600;color:#888;background:#fafafa;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:.04em}
 .prog-bar{flex:1;height:3px;border-radius:2px;background:#eee;overflow:hidden}
@@ -47,6 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pj{background:#E6F1FB;color:#0C447C}
 .pm{background:#FBEAF0;color:#72243E}
 .pb{background:#EAF3DE;color:#27500A}
+.pe{background:#F3EFFE;color:#3C3489}
 .ps{background:#EAF3DE;color:#27500A}
 .pp{background:#FFF3E0;color:#8B4513}
 .po{background:#FCEBEB;color:#A32D2D}
@@ -54,8 +56,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .edit-btn{width:26px;height:26px;border-radius:7px;border:1px solid #eee;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#bbb;transition:all .15s;opacity:0;flex-shrink:0}
 .chore-row:hover .edit-btn{opacity:1}
 .edit-btn:hover{background:#f0f0f0;color:#666}
-.add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa}
-.add-input{flex:1;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
+.add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa;flex-wrap:wrap}
+.add-input{flex:1;min-width:140px;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
 .add-input:focus{border-color:#1F3864}
 .add-select{border:1px solid #ddd;border-radius:8px;padding:7px 10px;font-size:12px;background:#fff;color:#1a1a1a;outline:none;cursor:pointer}
 .add-btn{padding:7px 14px;border-radius:8px;border:1px solid #1F3864;background:#1F3864;font-size:12px;font-weight:500;cursor:pointer;color:#fff;white-space:nowrap;transition:opacity .15s}
@@ -67,9 +69,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .td{background:#E6F1FB;color:#0C447C}
 .tw{background:#EAF3DE;color:#27500A}
 .tm{background:#FAEEDA;color:#633806}
+.to{background:#F3EFFE;color:#3C3489}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:1.5rem;width:340px;max-width:90vw}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;width:360px;max-width:90vw}
 .modal-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:1.25rem}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11px;color:#888;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
@@ -85,7 +88,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:13px}
 @media(max-width:600px){
   .stats{grid-template-columns:repeat(2,1fr)}
-  .d-grid,.w-grid,.m-grid{grid-template-columns:28px minmax(0,1fr) 70px 60px}
+  .d-grid,.w-grid,.m-grid,.o-grid{grid-template-columns:28px minmax(0,1fr) 70px 60px}
   .col-head .meta-col,.chore-row .meta,.edit-btn{display:none}
   .l-grid{grid-template-columns:70px minmax(0,1fr) 70px}
 }
@@ -119,12 +122,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="tab active" onclick="showTab('daily',this)">Daily</button>
     <button class="tab" onclick="showTab('weekly',this)">Weekly</button>
     <button class="tab" onclick="showTab('monthly',this)">Monthly</button>
+    <button class="tab" onclick="showTab('occasional',this)">Occasional</button>
     <button class="tab" onclick="showTab('log',this)">History log</button>
   </div>
 
   <div id="tab-daily"><div class="loading">Loading...</div></div>
   <div id="tab-weekly" style="display:none"><div class="loading">Loading...</div></div>
   <div id="tab-monthly" style="display:none"><div class="loading">Loading...</div></div>
+  <div id="tab-occasional" style="display:none"><div class="loading">Loading...</div></div>
   <div id="tab-log" style="display:none"><div class="loading">Loading...</div></div>
 </div>
 
@@ -140,6 +145,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <select id="m-day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
     </div>
     <div id="m-lastdone-field" class="field" style="display:none"><label>Last done</label><input id="m-lastdone" type="date"></div>
+    <div id="m-interval-field" class="field" style="display:none"><label>Repeat interval</label>
+      <select id="m-interval">
+        <option value="60">Every 2 months</option>
+        <option value="90">Every 3 months</option>
+        <option value="180">Every 6 months</option>
+        <option value="365">Every year</option>
+        <option value="730">Every 2 years</option>
+      </select>
+    </div>
     <div id="m-subsection-field" class="field"><label>Sub-section</label>
       <select id="m-subsection"><option value="Morning">Morning</option><option value="Daytime">Daytime</option><option value="Evening">Evening</option></select>
     </div>
@@ -193,36 +207,55 @@ async function loadAll() {
 
 function choresFor(freq) {
   let list = allChores.filter(c => c.frequency === freq);
-  if (currentWho !== 'All') list = list.filter(c => c.assigned_to === currentWho || c.assigned_to === 'Both');
+  if (currentWho !== 'All') list = list.filter(c => c.assigned_to === currentWho || c.assigned_to === 'Both' || c.assigned_to === 'Either');
   return list;
 }
 
-function pillClass(a) { return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pp':'pb'; }
+function pillClass(a) {
+  return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe':a==='Both'?'pb':'pb';
+}
+
+function intervalLabel(days) {
+  const d = parseInt(days);
+  if (d <= 60) return '2 months';
+  if (d <= 90) return '3 months';
+  if (d <= 180) return '6 months';
+  if (d <= 365) return 'Yearly';
+  return '2 years';
+}
+
+function occasionalStatus(chore) {
+  const done = dailyStatus[chore.id]?.done || false;
+  if (done) return {label:'Done', cls:'ps'};
+  if (!chore.last_done) return {label:'Not set', cls:'pp'};
+  const interval = parseInt(chore.sort_order) || 180;
+  const days = Math.floor((new Date() - new Date(chore.last_done)) / 86400000);
+  const pct = days / interval;
+  if (pct >= 1) return {label:'Overdue', cls:'po'};
+  if (pct >= 0.85) return {label:'Due soon', cls:'pp'};
+  return {label:'On track', cls:'ps'};
+}
 
 function renderDaily() {
   const chores = choresFor('daily');
   const sections = ['Morning','Daytime','Evening'];
-  let html = '';
-  html += `<div class="card">`;
-  html += `<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Streak</span><span>Status</span><span></span></div>`;
+  let html = '<div class="card">';
+  html += '<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Streak</span><span>Status</span><span></span></div>';
   sections.forEach(sec => {
     const sc = chores.filter(c => c.sub_section === sec);
     const doneCount = sc.filter(c => dailyStatus[c.id]?.done).length;
     const pct = sc.length ? Math.round(doneCount/sc.length*100) : 0;
     const icon = sec==='Morning'?'ti-sun':sec==='Daytime'?'ti-sun-high':'ti-moon';
     html += `<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
-    if (sc.length === 0) {
-      html += `<div class="empty">No chores in ${sec} yet</div>`;
-    }
+    if (!sc.length) html += '<div class="empty">No chores yet</div>';
     sc.forEach(c => {
-      const done = dailyStatus[c.id]?.done || false;
-      const statusPill = done ? '<span class="pill ps">Done</span>' : '<span class="pill pp">Pending</span>';
-      html += `<div class="chore-row d-grid ${done?'done':''}" onclick="toggleDaily('${c.id}')">
-        <div class="cb ${done?'on':''}"></div>
+      const done = dailyStatus[c.id]?.done||false;
+      html += `<div class="chore-row d-grid${done?' done':''}" onclick="toggleChore('${c.id}','daily')">
+        <div class="cb${done?' on':''}"></div>
         <span class="chore-name">${esc(c.name)}</span>
         <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
         <span class="meta">${c.streak||0} days</span>
-        ${statusPill}
+        <span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>
         <button class="edit-btn" onclick="openEdit(event,'${c.id}','daily')"><i class="ti ti-edit" style="font-size:13px"></i></button>
       </div>`;
     });
@@ -232,25 +265,23 @@ function renderDaily() {
     <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-daily-sec"><option>Morning</option><option>Daytime</option><option>Evening</option></select>
     <button class="add-btn" onclick="addChore('daily')"><i class="ti ti-plus"></i> Add</button>
-  </div>`;
-  html += `</div>`;
+  </div></div>`;
   document.getElementById('tab-daily').innerHTML = html;
 }
 
 function renderWeekly() {
   const chores = choresFor('weekly');
-  let html = `<div class="card">`;
-  html += `<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Due day</span><span>Status</span><span></span></div>`;
-  if (chores.length === 0) html += `<div class="empty">No weekly chores yet</div>`;
+  let html = '<div class="card">';
+  html += '<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Due day</span><span>Status</span><span></span></div>';
+  if (!chores.length) html += '<div class="empty">No weekly chores yet</div>';
   chores.forEach(c => {
-    const done = dailyStatus[c.id]?.done || false;
-    const statusPill = done ? '<span class="pill ps">Done</span>' : '<span class="pill pp">Pending</span>';
-    html += `<div class="chore-row w-grid ${done?'done':''}" onclick="toggleWeekly('${c.id}')">
-      <div class="cb ${done?'on':''}"></div>
+    const done = dailyStatus[c.id]?.done||false;
+    html += `<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly')">
+      <div class="cb${done?' on':''}"></div>
       <span class="chore-name">${esc(c.name)}</span>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
       <span class="meta">${c.due_day||'—'}</span>
-      ${statusPill}
+      <span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
@@ -265,45 +296,80 @@ function renderWeekly() {
 
 function renderMonthly() {
   const chores = choresFor('monthly');
-  let html = `<div class="card">`;
-  html += `<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>`;
-  if (chores.length === 0) html += `<div class="empty">No monthly chores yet</div>`;
+  let html = '<div class="card">';
+  html += '<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  if (!chores.length) html += '<div class="empty">No monthly chores yet</div>';
   chores.forEach(c => {
-    const done = dailyStatus[c.id]?.done || false;
-    let statusPill, statusClass;
-    if (done) { statusPill = 'Done'; statusClass = 'ps'; }
-    else if (!c.last_done) { statusPill = 'Not set'; statusClass = 'pp'; }
+    const done = dailyStatus[c.id]?.done||false;
+    let statusLabel, statusCls;
+    if (done) { statusLabel='Done'; statusCls='ps'; }
+    else if (!c.last_done) { statusLabel='Not set'; statusCls='pp'; }
     else {
-      const days = Math.floor((new Date() - new Date(c.last_done)) / 86400000);
-      if (days > 35) { statusPill = 'Overdue'; statusClass = 'po'; }
-      else if (days > 25) { statusPill = 'Due soon'; statusClass = 'pp'; }
-      else { statusPill = 'On track'; statusClass = 'ps'; }
+      const days = Math.floor((new Date()-new Date(c.last_done))/86400000);
+      if (days>35){statusLabel='Overdue';statusCls='po';}
+      else if(days>25){statusLabel='Due soon';statusCls='pp';}
+      else{statusLabel='On track';statusCls='ps';}
     }
-    const lastDoneDisplay = c.last_done ? new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
-    html += `<div class="chore-row m-grid ${done?'done':''}" onclick="toggleMonthly('${c.id}')">
-      <div class="cb ${done?'on':''}"></div>
+    const lastDisplay = c.last_done ? new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+    html += `<div class="chore-row m-grid${done?' done':''}" onclick="toggleChore('${c.id}','monthly')">
+      <div class="cb${done?' on':''}"></div>
       <span class="chore-name">${esc(c.name)}</span>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
-      <span class="meta">${lastDoneDisplay}</span>
-      <span class="pill ${statusClass}">${statusPill}</span>
+      <span class="meta">${lastDisplay}</span>
+      <span class="pill ${statusCls}">${statusLabel}</span>
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','monthly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
   html += `<div class="add-row">
     <input class="add-input" id="add-monthly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('monthly')">
-    <select class="add-select" id="add-monthly-assign"><option>Both</option><option>Jake</option><option>Marysa</option></select>
+    <select class="add-select" id="add-monthly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <button class="add-btn" onclick="addChore('monthly')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
   document.getElementById('tab-monthly').innerHTML = html;
 }
 
+function renderOccasional() {
+  const chores = choresFor('occasional');
+  let html = '<div class="card">';
+  html += '<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  if (!chores.length) html += '<div class="empty">No occasional chores yet — add things like annual smoke alarm checks or 6-month filter replacements</div>';
+  chores.forEach(c => {
+    const {label, cls} = occasionalStatus(c);
+    const done = dailyStatus[c.id]?.done||false;
+    const lastDisplay = c.last_done ? new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+    const interval = parseInt(c.sort_order)||180;
+    html += `<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
+      <div class="cb${done?' on':''}"></div>
+      <span class="chore-name">${esc(c.name)} <span style="font-size:11px;color:#bbb">(${intervalLabel(interval)})</span></span>
+      <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
+      <span class="meta">${lastDisplay}</span>
+      <span class="pill ${cls}">${label}</span>
+      <button class="edit-btn" onclick="openEdit(event,'${c.id}','occasional')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    </div>`;
+  });
+  html += `<div class="add-row">
+    <input class="add-input" id="add-occasional-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('occasional')">
+    <select class="add-select" id="add-occasional-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
+    <select class="add-select" id="add-occasional-interval">
+      <option value="60">Every 2 months</option>
+      <option value="90">Every 3 months</option>
+      <option value="180" selected>Every 6 months</option>
+      <option value="365">Every year</option>
+      <option value="730">Every 2 years</option>
+    </select>
+    <button class="add-btn" onclick="addChore('occasional')"><i class="ti ti-plus"></i> Add</button>
+  </div></div>`;
+  document.getElementById('tab-occasional').innerHTML = html;
+}
+
 function renderLog(comps) {
-  let html = `<div class="card">`;
-  html += `<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span>Type</span><span>Completed by</span></div>`;
-  if (comps.length === 0) { html += `<div class="empty">No history yet — completions will appear here</div>`; }
+  let html = '<div class="card">';
+  html += '<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span>Type</span><span>Completed by</span></div>';
+  if (!comps.length) html += '<div class="empty">No history yet — completions will appear here</div>';
   comps.forEach(c => {
     const d = new Date(c.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const tc = c.frequency==='daily'?'td':c.frequency==='weekly'?'tw':'tm';
+    const tcMap = {daily:'td',weekly:'tw',monthly:'tm',occasional:'to'};
+    const tc = tcMap[c.frequency]||'td';
     const tl = c.frequency ? c.frequency.charAt(0).toUpperCase()+c.frequency.slice(1) : '—';
     html += `<div class="log-row l-grid">
       <span class="date-lbl">${d}</span>
@@ -313,7 +379,7 @@ function renderLog(comps) {
       <span class="pill ${pillClass(c.completed_by||'Both')}">${c.completed_by||'—'}</span>
     </div>`;
   });
-  html += `</div>`;
+  html += '</div>';
   document.getElementById('tab-log').innerHTML = html;
 }
 
@@ -321,94 +387,55 @@ function renderAll() {
   renderDaily();
   renderWeekly();
   renderMonthly();
+  renderOccasional();
 }
 
 function updateStats() {
-  const daily = allChores.filter(c => c.frequency==='daily');
-  const doneDaily = daily.filter(c => dailyStatus[c.id]?.done).length;
+  const daily = allChores.filter(c=>c.frequency==='daily');
+  const doneDaily = daily.filter(c=>dailyStatus[c.id]?.done).length;
   const pctD = daily.length ? Math.round(doneDaily/daily.length*100) : 0;
   document.getElementById('s-today-pct').textContent = pctD+'%';
   document.getElementById('s-today-sub').textContent = doneDaily+' of '+daily.length+' done';
 
-  const weekly = allChores.filter(c => c.frequency==='weekly');
-  const doneWeekly = weekly.filter(c => dailyStatus[c.id]?.done).length;
+  const weekly = allChores.filter(c=>c.frequency==='weekly');
+  const doneWeekly = weekly.filter(c=>dailyStatus[c.id]?.done).length;
   const pctW = weekly.length ? Math.round(doneWeekly/weekly.length*100) : 0;
   document.getElementById('s-week-pct').textContent = pctW+'%';
   document.getElementById('s-week-sub').textContent = doneWeekly+' of '+weekly.length+' done';
 
-  const allDone = allChores.filter(c => dailyStatus[c.id]?.done);
-  const jDone = allDone.filter(c => c.assigned_to==='Jake').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
-  const mDone = allDone.filter(c => c.assigned_to==='Marysa').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
-  const total = jDone + mDone;
+  const allDone = allChores.filter(c=>dailyStatus[c.id]?.done);
+  const jDone = allDone.filter(c=>c.assigned_to==='Jake').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
+  const mDone = allDone.filter(c=>c.assigned_to==='Marysa').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
+  const total = jDone+mDone;
   document.getElementById('s-jake').textContent = total ? Math.round(jDone/total*100)+'%' : '—';
   document.getElementById('s-marysa').textContent = total ? Math.round(mDone/total*100)+'%' : '—';
 }
 
-async function toggleDaily(id) {
-  const current = dailyStatus[id]?.done || false;
+async function toggleChore(id, freq) {
+  const current = dailyStatus[id]?.done||false;
   const newVal = !current;
   try {
     if (dailyStatus[id]) {
-      await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+today, 'PATCH', {done: newVal});
+      await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+today,'PATCH',{done:newVal});
     } else {
-      await api('daily_status', 'POST', {chore_id: id, status_date: today, done: newVal});
+      await api('daily_status','POST',{chore_id:id,status_date:today,done:newVal});
     }
-    if (newVal) {
-      const chore = allChores.find(c=>c.id===id);
-      if (chore) {
-        await api('chores?id=eq.'+id, 'PATCH', {streak: (chore.streak||0)+1});
-        await api('completions', 'POST', {chore_id:id, chore_name:chore.name, assigned_to:chore.assigned_to, frequency:chore.frequency, completed_by: currentWho==='All'?chore.assigned_to:currentWho});
-        chore.streak = (chore.streak||0)+1;
+    const chore = allChores.find(c=>c.id===id);
+    if (newVal && chore) {
+      const updates = {};
+      if (freq==='daily') updates.streak = (chore.streak||0)+1;
+      if (freq==='monthly'||freq==='occasional') updates.last_done = today;
+      if (Object.keys(updates).length) {
+        await api('chores?id=eq.'+id,'PATCH',updates);
+        Object.assign(chore, updates);
       }
-      dailyStatus[id] = {done: true};
-    } else {
-      dailyStatus[id] = {done: false};
+      await api('completions','POST',{chore_id:id,chore_name:chore.name,assigned_to:chore.assigned_to,frequency:freq,completed_by:currentWho==='All'?chore.assigned_to:currentWho});
     }
-    renderDaily();
-    updateStats();
-  } catch(e) { showToast('Error saving'); console.error(e); }
-}
-
-async function toggleWeekly(id) {
-  const current = dailyStatus[id]?.done || false;
-  const newVal = !current;
-  try {
-    if (dailyStatus[id]) {
-      await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+today, 'PATCH', {done: newVal});
-    } else {
-      await api('daily_status', 'POST', {chore_id: id, status_date: today, done: newVal});
-    }
-    if (newVal) {
-      const chore = allChores.find(c=>c.id===id);
-      if (chore) {
-        await api('completions', 'POST', {chore_id:id, chore_name:chore.name, assigned_to:chore.assigned_to, frequency:chore.frequency, completed_by: currentWho==='All'?chore.assigned_to:currentWho});
-      }
-    }
-    dailyStatus[id] = {done: newVal};
-    renderWeekly();
-    updateStats();
-  } catch(e) { showToast('Error saving'); console.error(e); }
-}
-
-async function toggleMonthly(id) {
-  const current = dailyStatus[id]?.done || false;
-  const newVal = !current;
-  try {
-    if (dailyStatus[id]) {
-      await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+today, 'PATCH', {done: newVal});
-    } else {
-      await api('daily_status', 'POST', {chore_id: id, status_date: today, done: newVal});
-    }
-    if (newVal) {
-      const chore = allChores.find(c=>c.id===id);
-      if (chore) {
-        await api('chores?id=eq.'+id, 'PATCH', {last_done: today});
-        await api('completions', 'POST', {chore_id:id, chore_name:chore.name, assigned_to:chore.assigned_to, frequency:chore.frequency, completed_by: currentWho==='All'?chore.assigned_to:currentWho});
-        chore.last_done = today;
-      }
-    }
-    dailyStatus[id] = {done: newVal};
-    renderMonthly();
+    dailyStatus[id] = {done:newVal};
+    if (freq==='daily') renderDaily();
+    else if (freq==='weekly') renderWeekly();
+    else if (freq==='monthly') renderMonthly();
+    else if (freq==='occasional') renderOccasional();
     updateStats();
   } catch(e) { showToast('Error saving'); console.error(e); }
 }
@@ -418,15 +445,18 @@ async function addChore(freq) {
   const assignEl = document.getElementById('add-'+freq+'-assign');
   const name = nameEl.value.trim();
   if (!name) return;
-  const assigned = assignEl.value;
   const extras = {};
   if (freq==='daily') extras.sub_section = document.getElementById('add-daily-sec').value;
   if (freq==='weekly') extras.due_day = document.getElementById('add-weekly-day').value;
+  if (freq==='occasional') extras.sort_order = parseInt(document.getElementById('add-occasional-interval').value)||180;
   try {
-    const [created] = await api('chores', 'POST', {name, assigned_to: assigned, frequency: freq, ...extras});
+    const [created] = await api('chores','POST',{name,assigned_to:assignEl.value,frequency:freq,...extras});
     allChores.push(created);
     nameEl.value = '';
-    renderAll();
+    if (freq==='daily') renderDaily();
+    else if (freq==='weekly') renderWeekly();
+    else if (freq==='monthly') renderMonthly();
+    else if (freq==='occasional') renderOccasional();
     updateStats();
     showToast('Chore added');
   } catch(e) { showToast('Error adding chore'); console.error(e); }
@@ -434,44 +464,36 @@ async function addChore(freq) {
 
 function openEdit(e, id, freq) {
   e.stopPropagation();
-  activeChoreId = id;
-  activeFreq = freq;
+  activeChoreId = id; activeFreq = freq;
   const chore = allChores.find(c=>c.id===id);
   if (!chore) return;
-  document.getElementById('modal-title').textContent = 'Edit chore';
   document.getElementById('m-name').value = chore.name;
   document.getElementById('m-assign').value = chore.assigned_to;
   document.getElementById('m-streak').value = chore.streak||0;
   document.getElementById('m-streak-field').style.display = freq==='daily'?'':'none';
   document.getElementById('m-day-field').style.display = freq==='weekly'?'':'none';
-  document.getElementById('m-lastdone-field').style.display = freq==='monthly'?'':'none';
+  document.getElementById('m-lastdone-field').style.display = (freq==='monthly'||freq==='occasional')?'':'none';
+  document.getElementById('m-interval-field').style.display = freq==='occasional'?'':'none';
   document.getElementById('m-subsection-field').style.display = freq==='daily'?'':'none';
-  if (freq==='weekly' && chore.due_day) document.getElementById('m-day').value = chore.due_day;
-  if (freq==='monthly' && chore.last_done) document.getElementById('m-lastdone').value = chore.last_done;
-  if (freq==='daily' && chore.sub_section) document.getElementById('m-subsection').value = chore.sub_section;
-  document.getElementById('btn-delete').style.display = '';
+  if (freq==='weekly'&&chore.due_day) document.getElementById('m-day').value = chore.due_day;
+  if ((freq==='monthly'||freq==='occasional')&&chore.last_done) document.getElementById('m-lastdone').value = chore.last_done;
+  if (freq==='occasional') document.getElementById('m-interval').value = chore.sort_order||180;
+  if (freq==='daily'&&chore.sub_section) document.getElementById('m-subsection').value = chore.sub_section;
   document.getElementById('modal').classList.add('open');
 }
 
 async function saveChore() {
   if (!activeChoreId) return;
-  const updates = {
-    name: document.getElementById('m-name').value.trim(),
-    assigned_to: document.getElementById('m-assign').value,
-  };
-  if (activeFreq==='daily') {
-    updates.streak = parseInt(document.getElementById('m-streak').value)||0;
-    updates.sub_section = document.getElementById('m-subsection').value;
-  }
+  const updates = {name:document.getElementById('m-name').value.trim(), assigned_to:document.getElementById('m-assign').value};
+  if (activeFreq==='daily') { updates.streak=parseInt(document.getElementById('m-streak').value)||0; updates.sub_section=document.getElementById('m-subsection').value; }
   if (activeFreq==='weekly') updates.due_day = document.getElementById('m-day').value;
-  if (activeFreq==='monthly') updates.last_done = document.getElementById('m-lastdone').value || null;
+  if (activeFreq==='monthly') updates.last_done = document.getElementById('m-lastdone').value||null;
+  if (activeFreq==='occasional') { updates.last_done=document.getElementById('m-lastdone').value||null; updates.sort_order=parseInt(document.getElementById('m-interval').value)||180; }
   try {
-    await api('chores?id=eq.'+activeChoreId, 'PATCH', updates);
+    await api('chores?id=eq.'+activeChoreId,'PATCH',updates);
     const idx = allChores.findIndex(c=>c.id===activeChoreId);
-    if (idx>=0) allChores[idx] = {...allChores[idx], ...updates};
-    closeModal();
-    renderAll();
-    showToast('Saved');
+    if (idx>=0) allChores[idx] = {...allChores[idx],...updates};
+    closeModal(); renderAll(); showToast('Saved');
   } catch(e) { showToast('Error saving'); console.error(e); }
 }
 
@@ -479,26 +501,22 @@ async function deleteChore() {
   if (!activeChoreId) return;
   if (!confirm('Delete this chore?')) return;
   try {
-    await api('chores?id=eq.'+activeChoreId, 'DELETE');
+    await api('chores?id=eq.'+activeChoreId,'DELETE');
     allChores = allChores.filter(c=>c.id!==activeChoreId);
-    closeModal();
-    renderAll();
-    updateStats();
-    showToast('Deleted');
+    closeModal(); renderAll(); updateStats(); showToast('Deleted');
   } catch(e) { showToast('Error deleting'); console.error(e); }
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
-  activeChoreId = null;
-  activeFreq = null;
+  activeChoreId = null; activeFreq = null;
 }
 
 function showTab(name, btn) {
-  ['daily','weekly','monthly','log'].forEach(t => {
+  ['daily','weekly','monthly','occasional','log'].forEach(t => {
     document.getElementById('tab-'+t).style.display = t===name?'':'none';
   });
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   activeTab = name;
   if (name==='log') reloadLog();
@@ -513,24 +531,24 @@ async function reloadLog() {
 
 function setWho(who, btn) {
   currentWho = who;
-  document.querySelectorAll('.who-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderAll();
 }
 
 function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
 document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+  if (e.target===this) closeModal();
 });
 
 loadAll();
