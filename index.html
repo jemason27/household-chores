@@ -5,18 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mason Household Chores</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Mason Chores&quot;,&quot;short_name&quot;:&quot;Chores&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23E8620A&quot;,&quot;theme_color&quot;:&quot;%23E8620A&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23E8620A' rx='40'/%3E%3Cpath d='M96 40 L156 90 L156 160 L116 160 L116 120 L76 120 L76 160 L36 160 L36 90 Z' fill='white'/%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mason Chores">
+<meta name="theme-color" content="#E8620A">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23E8620A' rx='40'/%3E%3Cpath d='M90 35 L148 82 L148 152 L110 152 L110 114 L70 114 L70 152 L32 152 L32 82 Z' fill='white'/%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
 .app{max-width:780px;margin:0 auto;padding:1.5rem 1rem}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:36px;height:36px;border-radius:9px;background:#1F3864;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.logo-icon{width:36px;height:36px;border-radius:9px;background:#E8620A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
 .app-title{font-size:16px;font-weight:600;color:#1a1a1a}
 .app-sub{font-size:12px;color:#888}
 .who-toggle{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff}
 .who-btn{padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;border:none;color:#666;transition:all .15s}
-.who-btn.active{background:#1F3864;color:#fff}
+.who-btn.active{background:#E8620A;color:#fff}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
 .stat{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #eee}
 .stat-label{font-size:11px;color:#888;margin-bottom:4px}
@@ -24,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-sub{font-size:11px;color:#aaa;margin-top:3px}
 .tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
 .tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s}
-.tab.active{background:#1F3864;color:#fff;border-color:#1F3864}
+.tab.active{background:#E8620A;color:#fff;border-color:#E8620A}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem}
 .tab-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa}
 .tab-toolbar-label{font-size:12px;color:#888}
@@ -38,14 +44,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .l-grid{grid-template-columns:92px minmax(0,1fr) 90px 70px 82px}
 .sec-row{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:11px;font-weight:600;color:#888;background:#fafafa;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:.04em}
 .prog-bar{flex:1;height:3px;border-radius:2px;background:#eee;overflow:hidden}
-.prog-fill{height:100%;border-radius:2px;background:#3B6D11;transition:width .3s}
+.prog-fill{height:100%;border-radius:2px;background:#E8620A;transition:width .3s}
 .prog-lbl{font-size:11px;color:#bbb;min-width:28px;text-align:right}
 .chore-row{display:grid;align-items:center;padding:8px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .1s;gap:8px}
 .chore-row:last-of-type{border-bottom:none}
 .chore-row:hover{background:#fafafa}
 .chore-row.done .chore-name{text-decoration:line-through;color:#bbb}
 .cb{width:18px;height:18px;border-radius:5px;border:1.5px solid #ddd;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:#fff}
-.cb.on{background:#3B6D11;border-color:#3B6D11}
+.cb.on{background:#E8620A;border-color:#E8620A}
 .cb.on::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
 .chore-name{font-size:13px;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;white-space:nowrap}
@@ -62,9 +68,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .edit-btn:hover{background:#f0f0f0;color:#666}
 .add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa;flex-wrap:wrap}
 .add-input{flex:1;min-width:140px;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
-.add-input:focus{border-color:#1F3864}
+.add-input:focus{border-color:#E8620A}
 .add-select{border:1px solid #ddd;border-radius:8px;padding:7px 10px;font-size:12px;background:#fff;color:#1a1a1a;outline:none;cursor:pointer}
-.add-btn{padding:7px 14px;border-radius:8px;border:1px solid #1F3864;background:#1F3864;font-size:12px;font-weight:500;cursor:pointer;color:#fff;white-space:nowrap;transition:opacity .15s}
+.add-btn{padding:7px 14px;border-radius:8px;border:1px solid #E8620A;background:#E8620A;font-size:12px;font-weight:500;cursor:pointer;color:#fff;white-space:nowrap;transition:opacity .15s}
 .add-btn:hover{opacity:.85}
 .log-row{display:grid;align-items:center;padding:8px 16px;border-bottom:1px solid #f5f5f5;gap:8px}
 .log-row:last-child{border-bottom:none}
@@ -81,12 +87,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11px;color:#888;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .field input,.field select{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
-.field input:focus,.field select:focus{border-color:#1F3864}
+.field input:focus,.field select:focus{border-color:#E8620A}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem}
-.btn-save{padding:8px 18px;border-radius:8px;border:none;background:#1F3864;color:#fff;font-size:13px;font-weight:500;cursor:pointer}
+.btn-save{padding:8px 18px;border-radius:8px;border:none;background:#E8620A;color:#fff;font-size:13px;font-weight:500;cursor:pointer}
 .btn-cancel{padding:8px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;color:#666}
 .btn-delete{padding:8px 14px;border-radius:8px;border:1px solid #ffcdd2;background:#fff;font-size:13px;cursor:pointer;color:#c62828;margin-right:auto}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#E8620A;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 .loading{text-align:center;padding:3rem;color:#999;font-size:14px}
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:13px}
@@ -172,11 +178,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPA_URL = 'https://skyjfrzjtnhlupwtsjsu.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNreWpmcnpqdG5obHVwd3RzanN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDAzNTcsImV4cCI6MjA5NTgxNjM1N30.kQDBWrDug6uMWL9BJaQMN28tJvF-R_ao40BY7CsRJaA';
+const SUPA_URL='https://skyjfrzjtnhlupwtsjsu.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNreWpmcnpqdG5obHVwd3RzanN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDAzNTcsImV4cCI6MjA5NTgxNjM1N30.kQDBWrDug6uMWL9BJaQMN28tJvF-R_ao40BY7CsRJaA';
 const HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
-let allChores=[], dailyStatus={}, activeChoreId=null, activeFreq=null, currentWho='All', activeTab='daily';
+let allChores=[],dailyStatus={},activeChoreId=null,activeFreq=null,currentWho='All',activeTab='daily';
 const today=new Date().toISOString().split('T')[0];
 
 async function api(path,method='GET',body=null){
@@ -233,7 +239,7 @@ function occasionalStatus(chore){
   return{label:'On track',cls:'ps'};
 }
 
-function toolbarHTML(label, resetFn){
+function toolbarHTML(label,resetFn){
   return `<div class="tab-toolbar">
     <span class="tab-toolbar-label">${label}</span>
     <button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button>
@@ -420,15 +426,11 @@ async function resetDaily(){
   const dailyChores=allChores.filter(c=>c.frequency==='daily');
   try{
     await Promise.all(dailyChores.map(c=>{
-      if(dailyStatus[c.id]){
-        return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
-      }
+      if(dailyStatus[c.id]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    dailyChores.forEach(c=>{ if(dailyStatus[c.id]) dailyStatus[c.id].done=false; });
-    renderDaily();
-    updateStats();
-    showToast('Daily chores reset');
+    dailyChores.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
+    renderDaily();updateStats();showToast('Daily chores reset');
   }catch(e){showToast('Error resetting');console.error(e);}
 }
 
@@ -437,15 +439,11 @@ async function resetWeekly(){
   const weeklyChores=allChores.filter(c=>c.frequency==='weekly');
   try{
     await Promise.all(weeklyChores.map(c=>{
-      if(dailyStatus[c.id]){
-        return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
-      }
+      if(dailyStatus[c.id]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    weeklyChores.forEach(c=>{ if(dailyStatus[c.id]) dailyStatus[c.id].done=false; });
-    renderWeekly();
-    updateStats();
-    showToast('Weekly chores reset');
+    weeklyChores.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
+    renderWeekly();updateStats();showToast('Weekly chores reset');
   }catch(e){showToast('Error resetting');console.error(e);}
 }
 
@@ -495,14 +493,13 @@ async function addChore(freq){
     else if(freq==='weekly') renderWeekly();
     else if(freq==='monthly') renderMonthly();
     else if(freq==='occasional') renderOccasional();
-    updateStats();
-    showToast('Chore added');
+    updateStats();showToast('Chore added');
   }catch(e){showToast('Error adding chore');console.error(e);}
 }
 
 function openEdit(e,id,freq){
   e.stopPropagation();
-  activeChoreId=id; activeFreq=freq;
+  activeChoreId=id;activeFreq=freq;
   const chore=allChores.find(c=>c.id===id);
   if(!chore) return;
   document.getElementById('m-name').value=chore.name;
@@ -531,7 +528,7 @@ async function saveChore(){
     await api('chores?id=eq.'+activeChoreId,'PATCH',updates);
     const idx=allChores.findIndex(c=>c.id===activeChoreId);
     if(idx>=0) allChores[idx]={...allChores[idx],...updates};
-    closeModal(); renderAll(); showToast('Saved');
+    closeModal();renderAll();showToast('Saved');
   }catch(e){showToast('Error saving');console.error(e);}
 }
 
@@ -541,13 +538,13 @@ async function deleteChore(){
   try{
     await api('chores?id=eq.'+activeChoreId,'DELETE');
     allChores=allChores.filter(c=>c.id!==activeChoreId);
-    closeModal(); renderAll(); updateStats(); showToast('Deleted');
+    closeModal();renderAll();updateStats();showToast('Deleted');
   }catch(e){showToast('Error deleting');console.error(e);}
 }
 
 function closeModal(){
   document.getElementById('modal').classList.remove('open');
-  activeChoreId=null; activeFreq=null;
+  activeChoreId=null;activeFreq=null;
 }
 
 function showTab(name,btn){
