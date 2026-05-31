@@ -133,7 +133,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-title" id="modal-title">Edit chore</div>
     <div class="field"><label>Chore name</label><input id="m-name" type="text"></div>
     <div class="field"><label>Assigned to</label>
-      <select id="m-assign"><option>Jake</option><option>Marysa</option><option>Both</option></select>
+      <select id="m-assign"><option>Jake</option><option>Marysa</option><option>Both</option><option>Either</option></select>
     </div>
     <div id="m-streak-field" class="field"><label>Streak (days)</label><input id="m-streak" type="number" min="0"></div>
     <div id="m-day-field" class="field" style="display:none"><label>Due day</label>
@@ -197,7 +197,7 @@ function choresFor(freq) {
   return list;
 }
 
-function pillClass(a) { return a==='Jake'?'pj':a==='Marysa'?'pm':'pb'; }
+function pillClass(a) { return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pp':'pb'; }
 
 function renderDaily() {
   const chores = choresFor('daily');
@@ -229,7 +229,7 @@ function renderDaily() {
   });
   html += `<div class="add-row">
     <input class="add-input" id="add-daily-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('daily')">
-    <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option></select>
+    <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-daily-sec"><option>Morning</option><option>Daytime</option><option>Evening</option></select>
     <button class="add-btn" onclick="addChore('daily')"><i class="ti ti-plus"></i> Add</button>
   </div>`;
@@ -256,7 +256,7 @@ function renderWeekly() {
   });
   html += `<div class="add-row">
     <input class="add-input" id="add-weekly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('weekly')">
-    <select class="add-select" id="add-weekly-assign"><option>Both</option><option>Jake</option><option>Marysa</option></select>
+    <select class="add-select" id="add-weekly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-weekly-day"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
     <button class="add-btn" onclick="addChore('weekly')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
