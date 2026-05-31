@@ -16,8 +16,9 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
 .app{max-width:780px;margin:0 auto;padding:1.5rem 1rem}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:36px;height:36px;border-radius:9px;background:#E8620A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.logo-icon{width:36px;height:36px;border-radius:9px;background:#E8620A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;transition:opacity .15s}
+.logo:active .logo-icon{opacity:.7}
 .app-title{font-size:16px;font-weight:600;color:#1a1a1a}
 .app-sub{font-size:12px;color:#888}
 .who-toggle{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff}
@@ -28,20 +29,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-label{font-size:11px;color:#888;margin-bottom:4px}
 .stat-val{font-size:22px;font-weight:600;color:#1a1a1a;line-height:1}
 .stat-sub{font-size:11px;color:#aaa;margin-top:3px}
-.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
-.tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s}
+.tabs{display:flex;gap:4px;margin-bottom:1rem}
+.tab{flex:1;padding:6px 4px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s;text-align:center;white-space:nowrap}
 .tab.active{background:#E8620A;color:#fff;border-color:#E8620A}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem}
 .tab-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa}
 .tab-toolbar-label{font-size:12px;color:#888}
 .reset-btn{padding:5px 12px;border-radius:7px;border:1px solid #ffcdd2;background:#fff;font-size:12px;font-weight:500;cursor:pointer;color:#c62828;display:flex;align-items:center;gap:5px;transition:all .15s}
 .reset-btn:hover{background:#fff5f5}
-.col-head{display:grid;align-items:center;padding:8px 16px;font-size:11px;font-weight:600;color:#999;background:#fafafa;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.04em}
-.d-grid{grid-template-columns:30px minmax(0,1fr) 90px 82px 80px 30px}
-.w-grid{grid-template-columns:30px minmax(0,1fr) 90px 90px 80px 30px}
-.m-grid{grid-template-columns:30px minmax(0,1fr) 90px 100px 92px 30px}
-.o-grid{grid-template-columns:30px minmax(0,1fr) 90px 100px 110px 30px}
-.l-grid{grid-template-columns:92px minmax(0,1fr) 90px 70px 82px}
+.col-head{display:grid;align-items:center;padding:8px 16px;font-size:11px;font-weight:600;color:#999;background:#fafafa;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.04em;gap:8px}
+.d-grid{grid-template-columns:26px minmax(0,1fr) 82px 74px 72px 26px}
+.w-grid{grid-template-columns:26px minmax(0,1fr) 82px 82px 72px 26px}
+.m-grid{grid-template-columns:26px minmax(0,1fr) 82px 90px 84px 26px}
+.o-grid{grid-template-columns:26px minmax(0,1fr) 82px 90px 84px 26px}
+.l-grid{grid-template-columns:82px minmax(0,1fr) 82px 62px 74px}
 .sec-row{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:11px;font-weight:600;color:#888;background:#fafafa;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:.04em}
 .prog-bar{flex:1;height:3px;border-radius:2px;background:#eee;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px;background:#E8620A;transition:width .3s}
@@ -50,10 +51,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .chore-row:last-of-type{border-bottom:none}
 .chore-row:hover{background:#fafafa}
 .chore-row.done .chore-name{text-decoration:line-through;color:#bbb}
+.chore-row.done .chore-meta-line{opacity:.5}
 .cb{width:18px;height:18px;border-radius:5px;border:1.5px solid #ddd;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:#fff}
 .cb.on{background:#E8620A;border-color:#E8620A}
 .cb.on::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
-.chore-name{font-size:13px;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chore-cell{display:flex;flex-direction:column;gap:2px;min-width:0}
+.chore-name{font-size:13px;color:#1a1a1a;line-height:1.3;word-break:break-word}
+.chore-meta-line{font-size:11px;color:#aaa;display:none;align-items:center;gap:6px;flex-wrap:wrap}
+.chore-meta-line .meta-tag{background:#f5f5f5;padding:1px 6px;border-radius:4px;font-size:11px;color:#888}
 .pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;white-space:nowrap}
 .pj{background:#E6F1FB;color:#0C447C}
 .pm{background:#FBEAF0;color:#72243E}
@@ -62,12 +67,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ps{background:#EAF3DE;color:#27500A}
 .pp{background:#FFF3E0;color:#8B4513}
 .po{background:#FCEBEB;color:#A32D2D}
-.meta{font-size:12px;color:#999}
+.meta{font-size:12px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .edit-btn{width:26px;height:26px;border-radius:7px;border:1px solid #eee;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#bbb;transition:all .15s;opacity:0;flex-shrink:0}
 .chore-row:hover .edit-btn{opacity:1}
 .edit-btn:hover{background:#f0f0f0;color:#666}
 .add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa;flex-wrap:wrap}
-.add-input{flex:1;min-width:140px;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
+.add-input{flex:1;min-width:120px;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none}
 .add-input:focus{border-color:#E8620A}
 .add-select{border:1px solid #ddd;border-radius:8px;padding:7px 10px;font-size:12px;background:#fff;color:#1a1a1a;outline:none;cursor:pointer}
 .add-btn{padding:7px 14px;border-radius:8px;border:1px solid #E8620A;background:#E8620A;font-size:12px;font-weight:500;cursor:pointer;color:#fff;white-space:nowrap;transition:opacity .15s}
@@ -82,7 +87,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .to{background:#F3EFFE;color:#3C3489}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:1.5rem;width:360px;max-width:90vw}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;width:360px;max-width:90vw;max-height:90vh;overflow-y:auto}
 .modal-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:1.25rem}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11px;color:#888;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
@@ -92,26 +97,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-save{padding:8px 18px;border-radius:8px;border:none;background:#E8620A;color:#fff;font-size:13px;font-weight:500;cursor:pointer}
 .btn-cancel{padding:8px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;color:#666}
 .btn-delete{padding:8px 14px;border-radius:8px;border:1px solid #ffcdd2;background:#fff;font-size:13px;cursor:pointer;color:#c62828;margin-right:auto}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#E8620A;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#E8620A;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 .loading{text-align:center;padding:3rem;color:#999;font-size:14px}
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:13px}
+
 @media(max-width:600px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .d-grid,.w-grid,.m-grid,.o-grid{grid-template-columns:28px minmax(0,1fr) 70px 60px}
-  .col-head .meta-col,.chore-row .meta,.edit-btn{display:none}
-  .l-grid{grid-template-columns:70px minmax(0,1fr) 70px}
+  .app{padding:1rem .75rem}
+  .stats{grid-template-columns:repeat(2,1fr);gap:8px}
+  .stat{padding:10px 12px}
+  .stat-val{font-size:19px}
+  .tab{font-size:11px;padding:6px 2px}
+  .d-grid{grid-template-columns:26px minmax(0,1fr) 64px 62px 26px}
+  .w-grid{grid-template-columns:26px minmax(0,1fr) 64px 62px 26px}
+  .m-grid{grid-template-columns:26px minmax(0,1fr) 64px 72px 26px}
+  .o-grid{grid-template-columns:26px minmax(0,1fr) 64px 72px 26px}
+  .l-grid{grid-template-columns:60px minmax(0,1fr) 62px}
+  .col-head .hide-mobile{display:none}
+  .chore-row .desktop-meta{display:none}
+  .chore-meta-line{display:flex}
+  .log-row .hide-mobile{display:none}
+  .edit-btn{opacity:1;width:22px;height:22px}
+  .add-row{gap:6px;padding:8px 12px}
+  .add-select{padding:7px 6px;font-size:11px}
+  .add-btn{padding:7px 10px;font-size:11px}
 }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="topbar">
-    <div class="logo">
+    <div class="logo" onclick="refreshData()" title="Tap to refresh">
       <div class="logo-icon"><i class="ti ti-home"></i></div>
       <div>
         <div class="app-title">Mason Household</div>
-        <div class="app-sub">Chore tracker</div>
+        <div class="app-sub">Tap house to refresh</div>
       </div>
     </div>
     <div class="who-toggle">
@@ -133,7 +153,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="tab" onclick="showTab('weekly',this)">Weekly</button>
     <button class="tab" onclick="showTab('monthly',this)">Monthly</button>
     <button class="tab" onclick="showTab('occasional',this)">Occasional</button>
-    <button class="tab" onclick="showTab('log',this)">History log</button>
+    <button class="tab" onclick="showTab('log',this)">Log</button>
   </div>
 
   <div id="tab-daily"><div class="loading">Loading...</div></div>
@@ -168,7 +188,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <select id="m-subsection"><option value="AM">AM</option><option value="PM">PM</option></select>
     </div>
     <div class="modal-actions">
-      <button class="btn-delete" id="btn-delete" onclick="deleteChore()">Delete</button>
+      <button class="btn-delete" onclick="deleteChore()">Delete</button>
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-save" onclick="saveChore()">Save</button>
     </div>
@@ -184,17 +204,13 @@ const HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorizatio
 
 let allChores=[],dailyStatus={},activeChoreId=null,activeFreq=null,currentWho='All',activeTab='daily';
 const today=new Date().toISOString().split('T')[0];
-
 const ASSIGN_ORDER={'Jake':0,'Marysa':1,'Either':2,'Both':3};
 
 function sortChores(chores,isDone){
   return chores.slice().sort((a,b)=>{
-    const aDone=isDone(a)?1:0;
-    const bDone=isDone(b)?1:0;
+    const aDone=isDone(a)?1:0,bDone=isDone(b)?1:0;
     if(aDone!==bDone) return aDone-bDone;
-    const aA=ASSIGN_ORDER[a.assigned_to]??4;
-    const bA=ASSIGN_ORDER[b.assigned_to]??4;
-    return aA-bA;
+    return (ASSIGN_ORDER[a.assigned_to]??4)-(ASSIGN_ORDER[b.assigned_to]??4);
   });
 }
 
@@ -214,18 +230,24 @@ async function loadAll(){
       api('daily_status?status_date=eq.'+today),
       api('completions?order=completed_at.desc&limit=50')
     ]);
-    allChores=chores||[];
-    dailyStatus={};
-    (statuses||[]).forEach(s=>{dailyStatus[s.chore_id]=s;});
-    allChores=allChores.map(c=>{
-      if(c.frequency==='daily'&&(c.sub_section==='Morning'||c.sub_section==='Daytime')) return{...c,sub_section:'AM'};
-      if(c.frequency==='daily'&&c.sub_section==='Evening') return{...c,sub_section:'PM'};
+    allChores=(chores||[]).map(c=>{
+      if(c.frequency==='daily'){
+        const s=c.sub_section;
+        if(s==='Morning'||s==='Daytime') return{...c,sub_section:'AM'};
+        if(s==='Evening') return{...c,sub_section:'PM'};
+      }
       return c;
     });
-    renderAll();
-    renderLog(comps||[]);
-    updateStats();
+    dailyStatus={};
+    (statuses||[]).forEach(s=>{dailyStatus[s.chore_id]=s;});
+    renderAll();renderLog(comps||[]);updateStats();
   }catch(e){showToast('Error loading data');console.error(e);}
+}
+
+async function refreshData(){
+  showToast('Refreshing...');
+  await loadAll();
+  showToast('Up to date');
 }
 
 function choresFor(freq){
@@ -234,15 +256,12 @@ function choresFor(freq){
   return list;
 }
 
-function pillClass(a){return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe':a==='Both'?'pb':'pb';}
+function pillClass(a){return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe':'pb';}
 
 function intervalLabel(days){
   const d=parseInt(days);
-  if(d<=60) return '2 months';
-  if(d<=90) return '3 months';
-  if(d<=180) return '6 months';
-  if(d<=365) return 'Yearly';
-  return '2 years';
+  if(d<=60) return '2 mo';if(d<=90) return '3 mo';if(d<=180) return '6 mo';
+  if(d<=365) return 'Yearly';return '2 yr';
 }
 
 function occasionalStatus(chore){
@@ -258,40 +277,42 @@ function occasionalStatus(chore){
 }
 
 function toolbarHTML(label,resetFn){
-  return `<div class="tab-toolbar">
-    <span class="tab-toolbar-label">${label}</span>
-    <button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button>
+  return `<div class="tab-toolbar"><span class="tab-toolbar-label">${label}</span><button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button></div>`;
+}
+
+function choreRowHTML(c,gridClass,done,metaDesktop,metaMobile,statusPill){
+  return `<div class="chore-row ${gridClass}${done?' done':''}" onclick="toggleChore('${c.id}','${c.frequency}')">
+    <div class="cb${done?' on':''}"></div>
+    <div class="chore-cell">
+      <span class="chore-name">${esc(c.name)}</span>
+      <div class="chore-meta-line">${metaMobile}</div>
+    </div>
+    <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
+    <span class="meta desktop-meta">${metaDesktop}</span>
+    ${statusPill}
+    <button class="edit-btn" onclick="openEdit(event,'${c.id}','${c.frequency}')"><i class="ti ti-edit" style="font-size:13px"></i></button>
   </div>`;
 }
 
 function renderDaily(){
   const chores=choresFor('daily');
-  const sections=['AM','PM'];
   let html='<div class="card">';
   html+=toolbarHTML('Reset clears all daily checkboxes — tap each morning','resetDaily()');
-  html+='<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Streak</span><span>Status</span><span></span></div>';
-  sections.forEach(sec=>{
+  html+='<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Streak</span><span>Status</span><span></span></div>';
+  ['AM','PM'].forEach(sec=>{
     let sc=chores.filter(c=>{
       const s=c.sub_section;
-      if(sec==='AM') return s==='AM'||s==='Morning'||s==='Daytime'||!s;
-      return s==='PM'||s==='Evening';
+      return sec==='AM'?(s==='AM'||s==='Morning'||s==='Daytime'||!s):(s==='PM'||s==='Evening');
     });
     sc=sortChores(sc,c=>dailyStatus[c.id]?.done||false);
     const doneCount=sc.filter(c=>dailyStatus[c.id]?.done).length;
     const pct=sc.length?Math.round(doneCount/sc.length*100):0;
-    const icon=sec==='AM'?'ti-sun':'ti-moon';
-    html+=`<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
+    html+=`<div class="sec-row"><i class="ti ${sec==='AM'?'ti-sun':'ti-moon'}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
     if(!sc.length) html+='<div class="empty">No chores yet</div>';
     sc.forEach(c=>{
       const done=dailyStatus[c.id]?.done||false;
-      html+=`<div class="chore-row d-grid${done?' done':''}" onclick="toggleChore('${c.id}','daily')">
-        <div class="cb${done?' on':''}"></div>
-        <span class="chore-name">${esc(c.name)}</span>
-        <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
-        <span class="meta">${c.streak||0} days</span>
-        <span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>
-        <button class="edit-btn" onclick="openEdit(event,'${c.id}','daily')"><i class="ti ti-edit" style="font-size:13px"></i></button>
-      </div>`;
+      const streak=`${c.streak||0} day streak`;
+      html+=choreRowHTML(c,'d-grid',done,`${c.streak||0} days`,`<span class="meta-tag">${streak}</span>`,`<span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>`);
     });
   });
   html+=`<div class="add-row">
@@ -304,22 +325,15 @@ function renderDaily(){
 }
 
 function renderWeekly(){
-  const raw=choresFor('weekly');
-  const chores=sortChores(raw,c=>dailyStatus[c.id]?.done||false);
+  const chores=sortChores(choresFor('weekly'),c=>dailyStatus[c.id]?.done||false);
   let html='<div class="card">';
   html+=toolbarHTML('Reset clears all weekly checkboxes — tap every Sunday','resetWeekly()');
-  html+='<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Due day</span><span>Status</span><span></span></div>';
+  html+='<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Due day</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No weekly chores yet</div>';
   chores.forEach(c=>{
     const done=dailyStatus[c.id]?.done||false;
-    html+=`<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly')">
-      <div class="cb${done?' on':''}"></div>
-      <span class="chore-name">${esc(c.name)}</span>
-      <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
-      <span class="meta">${c.due_day||'—'}</span>
-      <span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>
-      <button class="edit-btn" onclick="openEdit(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
-    </div>`;
+    const day=c.due_day||'—';
+    html+=choreRowHTML(c,'w-grid',done,day,`<span class="meta-tag">${day}</span>`,`<span class="pill ${done?'ps':'pp'}">${done?'Done':'Pending'}</span>`);
   });
   html+=`<div class="add-row">
     <input class="add-input" id="add-weekly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('weekly')">
@@ -331,10 +345,9 @@ function renderWeekly(){
 }
 
 function renderMonthly(){
-  const raw=choresFor('monthly');
-  const chores=sortChores(raw,c=>dailyStatus[c.id]?.done||false);
+  const chores=sortChores(choresFor('monthly'),c=>dailyStatus[c.id]?.done||false);
   let html='<div class="card">';
-  html+='<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  html+='<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Last done</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No monthly chores yet</div>';
   chores.forEach(c=>{
     const done=dailyStatus[c.id]?.done||false;
@@ -348,14 +361,7 @@ function renderMonthly(){
       else{statusLabel='On track';statusCls='ps';}
     }
     const lastDisplay=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
-    html+=`<div class="chore-row m-grid${done?' done':''}" onclick="toggleChore('${c.id}','monthly')">
-      <div class="cb${done?' on':''}"></div>
-      <span class="chore-name">${esc(c.name)}</span>
-      <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
-      <span class="meta">${lastDisplay}</span>
-      <span class="pill ${statusCls}">${statusLabel}</span>
-      <button class="edit-btn" onclick="openEdit(event,'${c.id}','monthly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
-    </div>`;
+    html+=choreRowHTML(c,'m-grid',done,lastDisplay,`<span class="meta-tag">Last: ${lastDisplay}</span>`,`<span class="pill ${statusCls}">${statusLabel}</span>`);
   });
   html+=`<div class="add-row">
     <input class="add-input" id="add-monthly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('monthly')">
@@ -366,24 +372,28 @@ function renderMonthly(){
 }
 
 function renderOccasional(){
-  const raw=choresFor('occasional');
-  const chores=sortChores(raw,c=>dailyStatus[c.id]?.done||false);
+  const chores=sortChores(choresFor('occasional'),c=>dailyStatus[c.id]?.done||false);
   let html='<div class="card">';
-  html+='<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  html+='<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Last done</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No occasional chores yet</div>';
   chores.forEach(c=>{
     const{label,cls}=occasionalStatus(c);
     const done=dailyStatus[c.id]?.done||false;
-    const lastDisplay=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+    const lastDisplay=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}):'—';
     const interval=parseInt(c.sort_order)||180;
-    html+=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
+    const choreName=`${esc(c.name)} <span style="font-size:11px;color:#bbb">(${intervalLabel(interval)})</span>`;
+    const row=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
       <div class="cb${done?' on':''}"></div>
-      <span class="chore-name">${esc(c.name)} <span style="font-size:11px;color:#bbb">(${intervalLabel(interval)})</span></span>
+      <div class="chore-cell">
+        <span class="chore-name">${choreName}</span>
+        <div class="chore-meta-line"><span class="meta-tag">Last: ${lastDisplay}</span><span class="meta-tag">${intervalLabel(interval)}</span></div>
+      </div>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
-      <span class="meta">${lastDisplay}</span>
+      <span class="meta desktop-meta">${lastDisplay}</span>
       <span class="pill ${cls}">${label}</span>
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','occasional')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
+    html+=row;
   });
   html+=`<div class="add-row">
     <input class="add-input" id="add-occasional-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('occasional')">
@@ -402,7 +412,7 @@ function renderOccasional(){
 
 function renderLog(comps){
   let html='<div class="card">';
-  html+='<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span>Type</span><span>Completed by</span></div>';
+  html+='<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span class="hide-mobile">Type</span><span class="hide-mobile">By</span></div>';
   if(!comps.length) html+='<div class="empty">No history yet — completions will appear here</div>';
   comps.forEach(c=>{
     const d=new Date(c.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
@@ -413,20 +423,15 @@ function renderLog(comps){
       <span class="date-lbl">${d}</span>
       <span class="chore-name">${esc(c.chore_name||'')}</span>
       <span class="pill ${pillClass(c.assigned_to||'Both')}">${c.assigned_to||'—'}</span>
-      <span><span class="type-badge ${tc}">${tl}</span></span>
-      <span class="pill ${pillClass(c.completed_by||'Both')}">${c.completed_by||'—'}</span>
+      <span class="hide-mobile"><span class="type-badge ${tc}">${tl}</span></span>
+      <span class="pill ${pillClass(c.completed_by||'Both')} hide-mobile">${c.completed_by||'—'}</span>
     </div>`;
   });
   html+='</div>';
   document.getElementById('tab-log').innerHTML=html;
 }
 
-function renderAll(){
-  renderDaily();
-  renderWeekly();
-  renderMonthly();
-  renderOccasional();
-}
+function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasional();}
 
 function updateStats(){
   const daily=allChores.filter(c=>c.frequency==='daily');
@@ -449,28 +454,22 @@ function updateStats(){
 
 async function resetDaily(){
   if(!confirm('Reset all daily chores? This clears today\'s checkboxes but keeps streaks.')) return;
-  const dailyChores=allChores.filter(c=>c.frequency==='daily');
+  const dc=allChores.filter(c=>c.frequency==='daily');
   try{
-    await Promise.all(dailyChores.map(c=>{
-      if(dailyStatus[c.id]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
-      return Promise.resolve();
-    }));
-    dailyChores.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
+    await Promise.all(dc.map(c=>dailyStatus[c.id]?api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false}):Promise.resolve()));
+    dc.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
     renderDaily();updateStats();showToast('Daily chores reset');
-  }catch(e){showToast('Error resetting');console.error(e);}
+  }catch(e){showToast('Error resetting');}
 }
 
 async function resetWeekly(){
   if(!confirm('Reset all weekly chores for the new week?')) return;
-  const weeklyChores=allChores.filter(c=>c.frequency==='weekly');
+  const wc=allChores.filter(c=>c.frequency==='weekly');
   try{
-    await Promise.all(weeklyChores.map(c=>{
-      if(dailyStatus[c.id]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
-      return Promise.resolve();
-    }));
-    weeklyChores.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
+    await Promise.all(wc.map(c=>dailyStatus[c.id]?api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false}):Promise.resolve()));
+    wc.forEach(c=>{if(dailyStatus[c.id]) dailyStatus[c.id].done=false;});
     renderWeekly();updateStats();showToast('Weekly chores reset');
-  }catch(e){showToast('Error resetting');console.error(e);}
+  }catch(e){showToast('Error resetting');}
 }
 
 async function toggleChore(id,freq){
@@ -487,17 +486,14 @@ async function toggleChore(id,freq){
       const updates={};
       if(freq==='daily') updates.streak=(chore.streak||0)+1;
       if(freq==='monthly'||freq==='occasional') updates.last_done=today;
-      if(Object.keys(updates).length){
-        await api('chores?id=eq.'+id,'PATCH',updates);
-        Object.assign(chore,updates);
-      }
+      if(Object.keys(updates).length){await api('chores?id=eq.'+id,'PATCH',updates);Object.assign(chore,updates);}
       await api('completions','POST',{chore_id:id,chore_name:chore.name,assigned_to:chore.assigned_to,frequency:freq,completed_by:currentWho==='All'?chore.assigned_to:currentWho});
     }
     dailyStatus[id]={done:newVal};
     if(freq==='daily') renderDaily();
     else if(freq==='weekly') renderWeekly();
     else if(freq==='monthly') renderMonthly();
-    else if(freq==='occasional') renderOccasional();
+    else renderOccasional();
     updateStats();
   }catch(e){showToast('Error saving');console.error(e);}
 }
@@ -513,12 +509,11 @@ async function addChore(freq){
   if(freq==='occasional') extras.sort_order=parseInt(document.getElementById('add-occasional-interval').value)||180;
   try{
     const [created]=await api('chores','POST',{name,assigned_to:assignEl.value,frequency:freq,...extras});
-    allChores.push(created);
-    nameEl.value='';
+    allChores.push(created);nameEl.value='';
     if(freq==='daily') renderDaily();
     else if(freq==='weekly') renderWeekly();
     else if(freq==='monthly') renderMonthly();
-    else if(freq==='occasional') renderOccasional();
+    else renderOccasional();
     updateStats();showToast('Chore added');
   }catch(e){showToast('Error adding chore');console.error(e);}
 }
@@ -541,8 +536,7 @@ function openEdit(e,id,freq){
   if(freq==='occasional') document.getElementById('m-interval').value=chore.sort_order||180;
   if(freq==='daily'){
     const s=chore.sub_section;
-    const mapped=s==='Morning'||s==='Daytime'?'AM':s==='Evening'?'PM':s||'AM';
-    document.getElementById('m-subsection').value=mapped;
+    document.getElementById('m-subsection').value=(s==='Morning'||s==='Daytime')?'AM':(s==='Evening')?'PM':s||'AM';
   }
   document.getElementById('modal').classList.add('open');
 }
@@ -559,17 +553,16 @@ async function saveChore(){
     const idx=allChores.findIndex(c=>c.id===activeChoreId);
     if(idx>=0) allChores[idx]={...allChores[idx],...updates};
     closeModal();renderAll();showToast('Saved');
-  }catch(e){showToast('Error saving');console.error(e);}
+  }catch(e){showToast('Error saving');}
 }
 
 async function deleteChore(){
-  if(!activeChoreId) return;
-  if(!confirm('Delete this chore?')) return;
+  if(!activeChoreId||!confirm('Delete this chore?')) return;
   try{
     await api('chores?id=eq.'+activeChoreId,'DELETE');
     allChores=allChores.filter(c=>c.id!==activeChoreId);
     closeModal();renderAll();updateStats();showToast('Deleted');
-  }catch(e){showToast('Error deleting');console.error(e);}
+  }catch(e){showToast('Error deleting');}
 }
 
 function closeModal(){
@@ -588,10 +581,7 @@ function showTab(name,btn){
 }
 
 async function reloadLog(){
-  try{
-    const comps=await api('completions?order=completed_at.desc&limit=50');
-    renderLog(comps||[]);
-  }catch(e){}
+  try{const comps=await api('completions?order=completed_at.desc&limit=50');renderLog(comps||[]);}catch(e){}
 }
 
 function setWho(who,btn){
@@ -607,15 +597,11 @@ function esc(str){
 
 function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-document.getElementById('modal').addEventListener('click',function(e){
-  if(e.target===this) closeModal();
-});
-
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this) closeModal();});
 loadAll();
 </script>
 </body>
