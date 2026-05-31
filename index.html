@@ -26,6 +26,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s}
 .tab.active{background:#1F3864;color:#fff;border-color:#1F3864}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.tab-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+.tab-toolbar-label{font-size:12px;color:#888}
+.reset-btn{padding:5px 12px;border-radius:7px;border:1px solid #ffcdd2;background:#fff;font-size:12px;font-weight:500;cursor:pointer;color:#c62828;display:flex;align-items:center;gap:5px;transition:all .15s}
+.reset-btn:hover{background:#fff5f5}
 .col-head{display:grid;align-items:center;padding:8px 16px;font-size:11px;font-weight:600;color:#999;background:#fafafa;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.04em}
 .d-grid{grid-template-columns:30px minmax(0,1fr) 90px 82px 80px 30px}
 .w-grid{grid-template-columns:30px minmax(0,1fr) 90px 90px 80px 30px}
@@ -170,87 +174,88 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SUPA_URL = 'https://skyjfrzjtnhlupwtsjsu.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNreWpmcnpqdG5obHVwd3RzanN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDAzNTcsImV4cCI6MjA5NTgxNjM1N30.kQDBWrDug6uMWL9BJaQMN28tJvF-R_ao40BY7CsRJaA';
-const HEADERS = {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+const HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
-let allChores = [];
-let dailyStatus = {};
-let activeChoreId = null;
-let activeFreq = null;
-let currentWho = 'All';
-let activeTab = 'daily';
-const today = new Date().toISOString().split('T')[0];
+let allChores=[], dailyStatus={}, activeChoreId=null, activeFreq=null, currentWho='All', activeTab='daily';
+const today=new Date().toISOString().split('T')[0];
 
-async function api(path, method='GET', body=null) {
-  const opts = {method, headers:{...HEADERS, 'Prefer': method==='POST'?'return=representation':''}};
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(SUPA_URL+'/rest/v1/'+path, opts);
-  if (!r.ok) { const e = await r.text(); throw new Error(e); }
-  const txt = await r.text();
-  return txt ? JSON.parse(txt) : null;
+async function api(path,method='GET',body=null){
+  const opts={method,headers:{...HEADERS,'Prefer':method==='POST'?'return=representation':''}};
+  if(body) opts.body=JSON.stringify(body);
+  const r=await fetch(SUPA_URL+'/rest/v1/'+path,opts);
+  if(!r.ok){const e=await r.text();throw new Error(e);}
+  const txt=await r.text();
+  return txt?JSON.parse(txt):null;
 }
 
-async function loadAll() {
-  try {
-    const [chores, statuses, comps] = await Promise.all([
+async function loadAll(){
+  try{
+    const [chores,statuses,comps]=await Promise.all([
       api('chores?order=sort_order.asc,created_at.asc'),
       api('daily_status?status_date=eq.'+today),
       api('completions?order=completed_at.desc&limit=50')
     ]);
-    allChores = chores || [];
-    dailyStatus = {};
-    (statuses||[]).forEach(s => { dailyStatus[s.chore_id] = s; });
+    allChores=chores||[];
+    dailyStatus={};
+    (statuses||[]).forEach(s=>{dailyStatus[s.chore_id]=s;});
     renderAll();
     renderLog(comps||[]);
     updateStats();
-  } catch(e) { showToast('Error loading data'); console.error(e); }
+  }catch(e){showToast('Error loading data');console.error(e);}
 }
 
-function choresFor(freq) {
-  let list = allChores.filter(c => c.frequency === freq);
-  if (currentWho !== 'All') list = list.filter(c => c.assigned_to === currentWho || c.assigned_to === 'Both' || c.assigned_to === 'Either');
+function choresFor(freq){
+  let list=allChores.filter(c=>c.frequency===freq);
+  if(currentWho!=='All') list=list.filter(c=>c.assigned_to===currentWho||c.assigned_to==='Both'||c.assigned_to==='Either');
   return list;
 }
 
-function pillClass(a) {
-  return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe':a==='Both'?'pb':'pb';
-}
+function pillClass(a){return a==='Jake'?'pj':a==='Marysa'?'pm':a==='Either'?'pe':a==='Both'?'pb':'pb';}
 
-function intervalLabel(days) {
-  const d = parseInt(days);
-  if (d <= 60) return '2 months';
-  if (d <= 90) return '3 months';
-  if (d <= 180) return '6 months';
-  if (d <= 365) return 'Yearly';
+function intervalLabel(days){
+  const d=parseInt(days);
+  if(d<=60) return '2 months';
+  if(d<=90) return '3 months';
+  if(d<=180) return '6 months';
+  if(d<=365) return 'Yearly';
   return '2 years';
 }
 
-function occasionalStatus(chore) {
-  const done = dailyStatus[chore.id]?.done || false;
-  if (done) return {label:'Done', cls:'ps'};
-  if (!chore.last_done) return {label:'Not set', cls:'pp'};
-  const interval = parseInt(chore.sort_order) || 180;
-  const days = Math.floor((new Date() - new Date(chore.last_done)) / 86400000);
-  const pct = days / interval;
-  if (pct >= 1) return {label:'Overdue', cls:'po'};
-  if (pct >= 0.85) return {label:'Due soon', cls:'pp'};
-  return {label:'On track', cls:'ps'};
+function occasionalStatus(chore){
+  const done=dailyStatus[chore.id]?.done||false;
+  if(done) return{label:'Done',cls:'ps'};
+  if(!chore.last_done) return{label:'Not set',cls:'pp'};
+  const interval=parseInt(chore.sort_order)||180;
+  const days=Math.floor((new Date()-new Date(chore.last_done))/86400000);
+  const pct=days/interval;
+  if(pct>=1) return{label:'Overdue',cls:'po'};
+  if(pct>=0.85) return{label:'Due soon',cls:'pp'};
+  return{label:'On track',cls:'ps'};
 }
 
-function renderDaily() {
-  const chores = choresFor('daily');
-  const sections = ['Morning','Daytime','Evening'];
-  let html = '<div class="card">';
-  html += '<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Streak</span><span>Status</span><span></span></div>';
-  sections.forEach(sec => {
-    const sc = chores.filter(c => c.sub_section === sec);
-    const doneCount = sc.filter(c => dailyStatus[c.id]?.done).length;
-    const pct = sc.length ? Math.round(doneCount/sc.length*100) : 0;
-    const icon = sec==='Morning'?'ti-sun':sec==='Daytime'?'ti-sun-high':'ti-moon';
-    html += `<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
-    if (!sc.length) html += '<div class="empty">No chores yet</div>';
-    sc.forEach(c => {
-      const done = dailyStatus[c.id]?.done||false;
-      html += `<div class="chore-row d-grid${done?' done':''}" onclick="toggleChore('${c.id}','daily')">
+function toolbarHTML(label, resetFn){
+  return `<div class="tab-toolbar">
+    <span class="tab-toolbar-label">${label}</span>
+    <button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button>
+  </div>`;
+}
+
+function renderDaily(){
+  const chores=choresFor('daily');
+  const sections=['Morning','Daytime','Evening'];
+  let html='<div class="card">';
+  html+=toolbarHTML('Reset clears all daily checkboxes — tap each morning','resetDaily()');
+  html+='<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Streak</span><span>Status</span><span></span></div>';
+  sections.forEach(sec=>{
+    const sc=chores.filter(c=>c.sub_section===sec);
+    const doneCount=sc.filter(c=>dailyStatus[c.id]?.done).length;
+    const pct=sc.length?Math.round(doneCount/sc.length*100):0;
+    const icon=sec==='Morning'?'ti-sun':sec==='Daytime'?'ti-sun-high':'ti-moon';
+    html+=`<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
+    if(!sc.length) html+='<div class="empty">No chores yet</div>';
+    sc.forEach(c=>{
+      const done=dailyStatus[c.id]?.done||false;
+      html+=`<div class="chore-row d-grid${done?' done':''}" onclick="toggleChore('${c.id}','daily')">
         <div class="cb${done?' on':''}"></div>
         <span class="chore-name">${esc(c.name)}</span>
         <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
@@ -260,23 +265,24 @@ function renderDaily() {
       </div>`;
     });
   });
-  html += `<div class="add-row">
+  html+=`<div class="add-row">
     <input class="add-input" id="add-daily-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('daily')">
     <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-daily-sec"><option>Morning</option><option>Daytime</option><option>Evening</option></select>
     <button class="add-btn" onclick="addChore('daily')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
-  document.getElementById('tab-daily').innerHTML = html;
+  document.getElementById('tab-daily').innerHTML=html;
 }
 
-function renderWeekly() {
-  const chores = choresFor('weekly');
-  let html = '<div class="card">';
-  html += '<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Due day</span><span>Status</span><span></span></div>';
-  if (!chores.length) html += '<div class="empty">No weekly chores yet</div>';
-  chores.forEach(c => {
-    const done = dailyStatus[c.id]?.done||false;
-    html += `<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly')">
+function renderWeekly(){
+  const chores=choresFor('weekly');
+  let html='<div class="card">';
+  html+=toolbarHTML('Reset clears all weekly checkboxes — tap every Sunday','resetWeekly()');
+  html+='<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Due day</span><span>Status</span><span></span></div>';
+  if(!chores.length) html+='<div class="empty">No weekly chores yet</div>';
+  chores.forEach(c=>{
+    const done=dailyStatus[c.id]?.done||false;
+    html+=`<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly')">
       <div class="cb${done?' on':''}"></div>
       <span class="chore-name">${esc(c.name)}</span>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
@@ -285,33 +291,33 @@ function renderWeekly() {
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html += `<div class="add-row">
+  html+=`<div class="add-row">
     <input class="add-input" id="add-weekly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('weekly')">
     <select class="add-select" id="add-weekly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-weekly-day"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
     <button class="add-btn" onclick="addChore('weekly')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
-  document.getElementById('tab-weekly').innerHTML = html;
+  document.getElementById('tab-weekly').innerHTML=html;
 }
 
-function renderMonthly() {
-  const chores = choresFor('monthly');
-  let html = '<div class="card">';
-  html += '<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
-  if (!chores.length) html += '<div class="empty">No monthly chores yet</div>';
-  chores.forEach(c => {
-    const done = dailyStatus[c.id]?.done||false;
-    let statusLabel, statusCls;
-    if (done) { statusLabel='Done'; statusCls='ps'; }
-    else if (!c.last_done) { statusLabel='Not set'; statusCls='pp'; }
-    else {
-      const days = Math.floor((new Date()-new Date(c.last_done))/86400000);
-      if (days>35){statusLabel='Overdue';statusCls='po';}
+function renderMonthly(){
+  const chores=choresFor('monthly');
+  let html='<div class="card">';
+  html+='<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  if(!chores.length) html+='<div class="empty">No monthly chores yet</div>';
+  chores.forEach(c=>{
+    const done=dailyStatus[c.id]?.done||false;
+    let statusLabel,statusCls;
+    if(done){statusLabel='Done';statusCls='ps';}
+    else if(!c.last_done){statusLabel='Not set';statusCls='pp';}
+    else{
+      const days=Math.floor((new Date()-new Date(c.last_done))/86400000);
+      if(days>35){statusLabel='Overdue';statusCls='po';}
       else if(days>25){statusLabel='Due soon';statusCls='pp';}
       else{statusLabel='On track';statusCls='ps';}
     }
-    const lastDisplay = c.last_done ? new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
-    html += `<div class="chore-row m-grid${done?' done':''}" onclick="toggleChore('${c.id}','monthly')">
+    const lastDisplay=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
+    html+=`<div class="chore-row m-grid${done?' done':''}" onclick="toggleChore('${c.id}','monthly')">
       <div class="cb${done?' on':''}"></div>
       <span class="chore-name">${esc(c.name)}</span>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
@@ -320,25 +326,25 @@ function renderMonthly() {
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','monthly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html += `<div class="add-row">
+  html+=`<div class="add-row">
     <input class="add-input" id="add-monthly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('monthly')">
     <select class="add-select" id="add-monthly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <button class="add-btn" onclick="addChore('monthly')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
-  document.getElementById('tab-monthly').innerHTML = html;
+  document.getElementById('tab-monthly').innerHTML=html;
 }
 
-function renderOccasional() {
-  const chores = choresFor('occasional');
-  let html = '<div class="card">';
-  html += '<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
-  if (!chores.length) html += '<div class="empty">No occasional chores yet — add things like annual smoke alarm checks or 6-month filter replacements</div>';
-  chores.forEach(c => {
-    const {label, cls} = occasionalStatus(c);
-    const done = dailyStatus[c.id]?.done||false;
-    const lastDisplay = c.last_done ? new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-    const interval = parseInt(c.sort_order)||180;
-    html += `<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
+function renderOccasional(){
+  const chores=choresFor('occasional');
+  let html='<div class="card">';
+  html+='<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="meta-col">Last done</span><span>Status</span><span></span></div>';
+  if(!chores.length) html+='<div class="empty">No occasional chores yet — add things like annual smoke alarm checks or 6-month filter replacements</div>';
+  chores.forEach(c=>{
+    const{label,cls}=occasionalStatus(c);
+    const done=dailyStatus[c.id]?.done||false;
+    const lastDisplay=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+    const interval=parseInt(c.sort_order)||180;
+    html+=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional')">
       <div class="cb${done?' on':''}"></div>
       <span class="chore-name">${esc(c.name)} <span style="font-size:11px;color:#bbb">(${intervalLabel(interval)})</span></span>
       <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
@@ -347,7 +353,7 @@ function renderOccasional() {
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','occasional')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html += `<div class="add-row">
+  html+=`<div class="add-row">
     <input class="add-input" id="add-occasional-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('occasional')">
     <select class="add-select" id="add-occasional-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
     <select class="add-select" id="add-occasional-interval">
@@ -359,19 +365,19 @@ function renderOccasional() {
     </select>
     <button class="add-btn" onclick="addChore('occasional')"><i class="ti ti-plus"></i> Add</button>
   </div></div>`;
-  document.getElementById('tab-occasional').innerHTML = html;
+  document.getElementById('tab-occasional').innerHTML=html;
 }
 
-function renderLog(comps) {
-  let html = '<div class="card">';
-  html += '<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span>Type</span><span>Completed by</span></div>';
-  if (!comps.length) html += '<div class="empty">No history yet — completions will appear here</div>';
-  comps.forEach(c => {
-    const d = new Date(c.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const tcMap = {daily:'td',weekly:'tw',monthly:'tm',occasional:'to'};
-    const tc = tcMap[c.frequency]||'td';
-    const tl = c.frequency ? c.frequency.charAt(0).toUpperCase()+c.frequency.slice(1) : '—';
-    html += `<div class="log-row l-grid">
+function renderLog(comps){
+  let html='<div class="card">';
+  html+='<div class="col-head l-grid"><span>Date</span><span>Chore</span><span>Assigned</span><span>Type</span><span>Completed by</span></div>';
+  if(!comps.length) html+='<div class="empty">No history yet — completions will appear here</div>';
+  comps.forEach(c=>{
+    const d=new Date(c.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const tcMap={daily:'td',weekly:'tw',monthly:'tm',occasional:'to'};
+    const tc=tcMap[c.frequency]||'td';
+    const tl=c.frequency?c.frequency.charAt(0).toUpperCase()+c.frequency.slice(1):'—';
+    html+=`<div class="log-row l-grid">
       <span class="date-lbl">${d}</span>
       <span class="chore-name">${esc(c.chore_name||'')}</span>
       <span class="pill ${pillClass(c.assigned_to||'Both')}">${c.assigned_to||'—'}</span>
@@ -379,176 +385,208 @@ function renderLog(comps) {
       <span class="pill ${pillClass(c.completed_by||'Both')}">${c.completed_by||'—'}</span>
     </div>`;
   });
-  html += '</div>';
-  document.getElementById('tab-log').innerHTML = html;
+  html+='</div>';
+  document.getElementById('tab-log').innerHTML=html;
 }
 
-function renderAll() {
+function renderAll(){
   renderDaily();
   renderWeekly();
   renderMonthly();
   renderOccasional();
 }
 
-function updateStats() {
-  const daily = allChores.filter(c=>c.frequency==='daily');
-  const doneDaily = daily.filter(c=>dailyStatus[c.id]?.done).length;
-  const pctD = daily.length ? Math.round(doneDaily/daily.length*100) : 0;
-  document.getElementById('s-today-pct').textContent = pctD+'%';
-  document.getElementById('s-today-sub').textContent = doneDaily+' of '+daily.length+' done';
-
-  const weekly = allChores.filter(c=>c.frequency==='weekly');
-  const doneWeekly = weekly.filter(c=>dailyStatus[c.id]?.done).length;
-  const pctW = weekly.length ? Math.round(doneWeekly/weekly.length*100) : 0;
-  document.getElementById('s-week-pct').textContent = pctW+'%';
-  document.getElementById('s-week-sub').textContent = doneWeekly+' of '+weekly.length+' done';
-
-  const allDone = allChores.filter(c=>dailyStatus[c.id]?.done);
-  const jDone = allDone.filter(c=>c.assigned_to==='Jake').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
-  const mDone = allDone.filter(c=>c.assigned_to==='Marysa').length + allDone.filter(c=>c.assigned_to==='Both').length*0.5;
-  const total = jDone+mDone;
-  document.getElementById('s-jake').textContent = total ? Math.round(jDone/total*100)+'%' : '—';
-  document.getElementById('s-marysa').textContent = total ? Math.round(mDone/total*100)+'%' : '—';
+function updateStats(){
+  const daily=allChores.filter(c=>c.frequency==='daily');
+  const doneDaily=daily.filter(c=>dailyStatus[c.id]?.done).length;
+  const pctD=daily.length?Math.round(doneDaily/daily.length*100):0;
+  document.getElementById('s-today-pct').textContent=pctD+'%';
+  document.getElementById('s-today-sub').textContent=doneDaily+' of '+daily.length+' done';
+  const weekly=allChores.filter(c=>c.frequency==='weekly');
+  const doneWeekly=weekly.filter(c=>dailyStatus[c.id]?.done).length;
+  const pctW=weekly.length?Math.round(doneWeekly/weekly.length*100):0;
+  document.getElementById('s-week-pct').textContent=pctW+'%';
+  document.getElementById('s-week-sub').textContent=doneWeekly+' of '+weekly.length+' done';
+  const allDone=allChores.filter(c=>dailyStatus[c.id]?.done);
+  const jDone=allDone.filter(c=>c.assigned_to==='Jake').length+allDone.filter(c=>c.assigned_to==='Both').length*0.5;
+  const mDone=allDone.filter(c=>c.assigned_to==='Marysa').length+allDone.filter(c=>c.assigned_to==='Both').length*0.5;
+  const total=jDone+mDone;
+  document.getElementById('s-jake').textContent=total?Math.round(jDone/total*100)+'%':'—';
+  document.getElementById('s-marysa').textContent=total?Math.round(mDone/total*100)+'%':'—';
 }
 
-async function toggleChore(id, freq) {
-  const current = dailyStatus[id]?.done||false;
-  const newVal = !current;
-  try {
-    if (dailyStatus[id]) {
+async function resetDaily(){
+  if(!confirm('Reset all daily chores? This clears today\'s checkboxes but keeps streaks.')) return;
+  const dailyChores=allChores.filter(c=>c.frequency==='daily');
+  try{
+    await Promise.all(dailyChores.map(c=>{
+      if(dailyStatus[c.id]){
+        return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
+      }
+      return Promise.resolve();
+    }));
+    dailyChores.forEach(c=>{ if(dailyStatus[c.id]) dailyStatus[c.id].done=false; });
+    renderDaily();
+    updateStats();
+    showToast('Daily chores reset');
+  }catch(e){showToast('Error resetting');console.error(e);}
+}
+
+async function resetWeekly(){
+  if(!confirm('Reset all weekly chores for the new week?')) return;
+  const weeklyChores=allChores.filter(c=>c.frequency==='weekly');
+  try{
+    await Promise.all(weeklyChores.map(c=>{
+      if(dailyStatus[c.id]){
+        return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+today,'PATCH',{done:false});
+      }
+      return Promise.resolve();
+    }));
+    weeklyChores.forEach(c=>{ if(dailyStatus[c.id]) dailyStatus[c.id].done=false; });
+    renderWeekly();
+    updateStats();
+    showToast('Weekly chores reset');
+  }catch(e){showToast('Error resetting');console.error(e);}
+}
+
+async function toggleChore(id,freq){
+  const current=dailyStatus[id]?.done||false;
+  const newVal=!current;
+  try{
+    if(dailyStatus[id]){
       await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+today,'PATCH',{done:newVal});
-    } else {
+    }else{
       await api('daily_status','POST',{chore_id:id,status_date:today,done:newVal});
     }
-    const chore = allChores.find(c=>c.id===id);
-    if (newVal && chore) {
-      const updates = {};
-      if (freq==='daily') updates.streak = (chore.streak||0)+1;
-      if (freq==='monthly'||freq==='occasional') updates.last_done = today;
-      if (Object.keys(updates).length) {
+    const chore=allChores.find(c=>c.id===id);
+    if(newVal&&chore){
+      const updates={};
+      if(freq==='daily') updates.streak=(chore.streak||0)+1;
+      if(freq==='monthly'||freq==='occasional') updates.last_done=today;
+      if(Object.keys(updates).length){
         await api('chores?id=eq.'+id,'PATCH',updates);
-        Object.assign(chore, updates);
+        Object.assign(chore,updates);
       }
       await api('completions','POST',{chore_id:id,chore_name:chore.name,assigned_to:chore.assigned_to,frequency:freq,completed_by:currentWho==='All'?chore.assigned_to:currentWho});
     }
-    dailyStatus[id] = {done:newVal};
-    if (freq==='daily') renderDaily();
-    else if (freq==='weekly') renderWeekly();
-    else if (freq==='monthly') renderMonthly();
-    else if (freq==='occasional') renderOccasional();
+    dailyStatus[id]={done:newVal};
+    if(freq==='daily') renderDaily();
+    else if(freq==='weekly') renderWeekly();
+    else if(freq==='monthly') renderMonthly();
+    else if(freq==='occasional') renderOccasional();
     updateStats();
-  } catch(e) { showToast('Error saving'); console.error(e); }
+  }catch(e){showToast('Error saving');console.error(e);}
 }
 
-async function addChore(freq) {
-  const nameEl = document.getElementById('add-'+freq+'-name');
-  const assignEl = document.getElementById('add-'+freq+'-assign');
-  const name = nameEl.value.trim();
-  if (!name) return;
-  const extras = {};
-  if (freq==='daily') extras.sub_section = document.getElementById('add-daily-sec').value;
-  if (freq==='weekly') extras.due_day = document.getElementById('add-weekly-day').value;
-  if (freq==='occasional') extras.sort_order = parseInt(document.getElementById('add-occasional-interval').value)||180;
-  try {
-    const [created] = await api('chores','POST',{name,assigned_to:assignEl.value,frequency:freq,...extras});
+async function addChore(freq){
+  const nameEl=document.getElementById('add-'+freq+'-name');
+  const assignEl=document.getElementById('add-'+freq+'-assign');
+  const name=nameEl.value.trim();
+  if(!name) return;
+  const extras={};
+  if(freq==='daily') extras.sub_section=document.getElementById('add-daily-sec').value;
+  if(freq==='weekly') extras.due_day=document.getElementById('add-weekly-day').value;
+  if(freq==='occasional') extras.sort_order=parseInt(document.getElementById('add-occasional-interval').value)||180;
+  try{
+    const [created]=await api('chores','POST',{name,assigned_to:assignEl.value,frequency:freq,...extras});
     allChores.push(created);
-    nameEl.value = '';
-    if (freq==='daily') renderDaily();
-    else if (freq==='weekly') renderWeekly();
-    else if (freq==='monthly') renderMonthly();
-    else if (freq==='occasional') renderOccasional();
+    nameEl.value='';
+    if(freq==='daily') renderDaily();
+    else if(freq==='weekly') renderWeekly();
+    else if(freq==='monthly') renderMonthly();
+    else if(freq==='occasional') renderOccasional();
     updateStats();
     showToast('Chore added');
-  } catch(e) { showToast('Error adding chore'); console.error(e); }
+  }catch(e){showToast('Error adding chore');console.error(e);}
 }
 
-function openEdit(e, id, freq) {
+function openEdit(e,id,freq){
   e.stopPropagation();
-  activeChoreId = id; activeFreq = freq;
-  const chore = allChores.find(c=>c.id===id);
-  if (!chore) return;
-  document.getElementById('m-name').value = chore.name;
-  document.getElementById('m-assign').value = chore.assigned_to;
-  document.getElementById('m-streak').value = chore.streak||0;
-  document.getElementById('m-streak-field').style.display = freq==='daily'?'':'none';
-  document.getElementById('m-day-field').style.display = freq==='weekly'?'':'none';
-  document.getElementById('m-lastdone-field').style.display = (freq==='monthly'||freq==='occasional')?'':'none';
-  document.getElementById('m-interval-field').style.display = freq==='occasional'?'':'none';
-  document.getElementById('m-subsection-field').style.display = freq==='daily'?'':'none';
-  if (freq==='weekly'&&chore.due_day) document.getElementById('m-day').value = chore.due_day;
-  if ((freq==='monthly'||freq==='occasional')&&chore.last_done) document.getElementById('m-lastdone').value = chore.last_done;
-  if (freq==='occasional') document.getElementById('m-interval').value = chore.sort_order||180;
-  if (freq==='daily'&&chore.sub_section) document.getElementById('m-subsection').value = chore.sub_section;
+  activeChoreId=id; activeFreq=freq;
+  const chore=allChores.find(c=>c.id===id);
+  if(!chore) return;
+  document.getElementById('m-name').value=chore.name;
+  document.getElementById('m-assign').value=chore.assigned_to;
+  document.getElementById('m-streak').value=chore.streak||0;
+  document.getElementById('m-streak-field').style.display=freq==='daily'?'':'none';
+  document.getElementById('m-day-field').style.display=freq==='weekly'?'':'none';
+  document.getElementById('m-lastdone-field').style.display=(freq==='monthly'||freq==='occasional')?'':'none';
+  document.getElementById('m-interval-field').style.display=freq==='occasional'?'':'none';
+  document.getElementById('m-subsection-field').style.display=freq==='daily'?'':'none';
+  if(freq==='weekly'&&chore.due_day) document.getElementById('m-day').value=chore.due_day;
+  if((freq==='monthly'||freq==='occasional')&&chore.last_done) document.getElementById('m-lastdone').value=chore.last_done;
+  if(freq==='occasional') document.getElementById('m-interval').value=chore.sort_order||180;
+  if(freq==='daily'&&chore.sub_section) document.getElementById('m-subsection').value=chore.sub_section;
   document.getElementById('modal').classList.add('open');
 }
 
-async function saveChore() {
-  if (!activeChoreId) return;
-  const updates = {name:document.getElementById('m-name').value.trim(), assigned_to:document.getElementById('m-assign').value};
-  if (activeFreq==='daily') { updates.streak=parseInt(document.getElementById('m-streak').value)||0; updates.sub_section=document.getElementById('m-subsection').value; }
-  if (activeFreq==='weekly') updates.due_day = document.getElementById('m-day').value;
-  if (activeFreq==='monthly') updates.last_done = document.getElementById('m-lastdone').value||null;
-  if (activeFreq==='occasional') { updates.last_done=document.getElementById('m-lastdone').value||null; updates.sort_order=parseInt(document.getElementById('m-interval').value)||180; }
-  try {
+async function saveChore(){
+  if(!activeChoreId) return;
+  const updates={name:document.getElementById('m-name').value.trim(),assigned_to:document.getElementById('m-assign').value};
+  if(activeFreq==='daily'){updates.streak=parseInt(document.getElementById('m-streak').value)||0;updates.sub_section=document.getElementById('m-subsection').value;}
+  if(activeFreq==='weekly') updates.due_day=document.getElementById('m-day').value;
+  if(activeFreq==='monthly') updates.last_done=document.getElementById('m-lastdone').value||null;
+  if(activeFreq==='occasional'){updates.last_done=document.getElementById('m-lastdone').value||null;updates.sort_order=parseInt(document.getElementById('m-interval').value)||180;}
+  try{
     await api('chores?id=eq.'+activeChoreId,'PATCH',updates);
-    const idx = allChores.findIndex(c=>c.id===activeChoreId);
-    if (idx>=0) allChores[idx] = {...allChores[idx],...updates};
+    const idx=allChores.findIndex(c=>c.id===activeChoreId);
+    if(idx>=0) allChores[idx]={...allChores[idx],...updates};
     closeModal(); renderAll(); showToast('Saved');
-  } catch(e) { showToast('Error saving'); console.error(e); }
+  }catch(e){showToast('Error saving');console.error(e);}
 }
 
-async function deleteChore() {
-  if (!activeChoreId) return;
-  if (!confirm('Delete this chore?')) return;
-  try {
+async function deleteChore(){
+  if(!activeChoreId) return;
+  if(!confirm('Delete this chore?')) return;
+  try{
     await api('chores?id=eq.'+activeChoreId,'DELETE');
-    allChores = allChores.filter(c=>c.id!==activeChoreId);
+    allChores=allChores.filter(c=>c.id!==activeChoreId);
     closeModal(); renderAll(); updateStats(); showToast('Deleted');
-  } catch(e) { showToast('Error deleting'); console.error(e); }
+  }catch(e){showToast('Error deleting');console.error(e);}
 }
 
-function closeModal() {
+function closeModal(){
   document.getElementById('modal').classList.remove('open');
-  activeChoreId = null; activeFreq = null;
+  activeChoreId=null; activeFreq=null;
 }
 
-function showTab(name, btn) {
-  ['daily','weekly','monthly','occasional','log'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===name?'':'none';
+function showTab(name,btn){
+  ['daily','weekly','monthly','occasional','log'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'':'none';
   });
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  activeTab = name;
-  if (name==='log') reloadLog();
+  activeTab=name;
+  if(name==='log') reloadLog();
 }
 
-async function reloadLog() {
-  try {
-    const comps = await api('completions?order=completed_at.desc&limit=50');
+async function reloadLog(){
+  try{
+    const comps=await api('completions?order=completed_at.desc&limit=50');
     renderLog(comps||[]);
-  } catch(e) {}
+  }catch(e){}
 }
 
-function setWho(who, btn) {
-  currentWho = who;
+function setWho(who,btn){
+  currentWho=who;
   document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderAll();
 }
 
-function esc(str) {
+function esc(str){
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target===this) closeModal();
+document.getElementById('modal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
 });
 
 loadAll();
