@@ -23,7 +23,6 @@ body.dark .header{background:#1a1a1a}
 .logo{display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .logo-icon{width:36px;height:36px;border-radius:9px;background:#E8620A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;transition:opacity .15s}
 .logo:active .logo-icon{opacity:.7}
-.logo-text{}
 .app-title{font-size:16px;font-weight:600;color:#1a1a1a;transition:color .5s}
 body.dark .app-title{color:#f0f0f0}
 .app-date{font-size:11px;color:#E8620A;font-weight:500;margin-top:1px}
@@ -268,7 +267,7 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
     <div class="topbar">
       <div class="logo" onclick="refreshData()">
         <div class="logo-icon"><i class="ti ti-home"></i></div>
-        <div class="logo-text">
+        <div>
           <div class="app-title">Mason Chores</div>
           <div class="app-date" id="app-date"></div>
         </div>
@@ -336,7 +335,11 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
       </select>
     </div>
     <div id="m-subsection-field" class="field"><label>Sub-section</label>
-      <select id="m-subsection"><option value="AM">AM</option><option value="PM">PM</option></select>
+      <select id="m-subsection">
+        <option value="Morning">Morning</option>
+        <option value="Midday">Midday</option>
+        <option value="Evening">Evening</option>
+      </select>
     </div>
     <div class="modal-actions">
       <button class="btn-delete" onclick="deleteChore()">Delete</button>
@@ -373,6 +376,11 @@ const REWARDS=['You pick date night','Partner picks date night','No-veto movie n
 const REWARD_COST=50;
 const ASSIGN_ORDER={'Jake':0,'Marysa':1,'Either':2,'Both':3};
 const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const SECTIONS=[
+  {key:'Morning', icon:'ti-sun'},
+  {key:'Midday',  icon:'ti-sun-high'},
+  {key:'Evening', icon:'ti-moon'}
+];
 
 let allChores=[],dailyStatusMap={},activeChoreId=null,activeFreq=null;
 let currentWho='All',activeTab='daily';
@@ -403,12 +411,19 @@ function getWeekDates(){
 
 function getDailyStatusKey(choreId,dateStr){return choreId+'|'+dateStr;}
 
+function normalizeSubsection(s){
+  if(!s) return 'Morning';
+  if(s==='AM'||s==='Morning'||s==='Daytime') return 'Morning';
+  if(s==='Midday') return 'Midday';
+  if(s==='PM'||s==='Evening') return 'Evening';
+  return 'Morning';
+}
+
 function isDueOnDate(chore,dateStr){
   if(chore.frequency!=='daily') return false;
   const interval=chore.daily_interval||1;
   if(interval===1) return true;
-  if(!chore.last_done&&!chore.created_at) return true;
-  const ref=new Date(chore.last_done||chore.created_at);
+  const ref=new Date(chore.last_done||chore.created_at||todayStr);
   const target=new Date(dateStr);
   const diffDays=Math.round((target-ref)/86400000);
   return diffDays%interval===0;
@@ -467,9 +482,7 @@ async function loadAll(){
     ]);
     allChores=(chores||[]).map(c=>{
       if(c.frequency==='daily'){
-        const s=c.sub_section;
-        if(s==='Morning'||s==='Daytime') return{...c,sub_section:'AM'};
-        if(s==='Evening') return{...c,sub_section:'PM'};
+        return{...c,sub_section:normalizeSubsection(c.sub_section)};
       }
       return c;
     });
@@ -494,24 +507,19 @@ async function loadAll(){
 
 function setAppDate(){
   const d=new Date();
-  const label=d.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});
-  document.getElementById('app-date').textContent=label;
+  document.getElementById('app-date').textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});
 }
 
 function buildDayStrip(){
   const strip=document.getElementById('day-strip');
   strip.innerHTML='';
-  const weekDates=getWeekDates();
-  weekDates.forEach((d,i)=>{
+  getWeekDates().forEach((d)=>{
     const dStr=dateToStr(d);
     const isToday=dStr===todayStr;
     const isSelected=dStr===selectedDateStr;
     const isFuture=d>todayDate&&!isToday;
     const dailyChores=allChores.filter(c=>c.frequency==='daily'&&isDueOnDate(c,dStr));
-    const doneCount=dailyChores.filter(c=>{
-      const key=getDailyStatusKey(c.id,dStr);
-      return dailyStatusMap[key]?.done;
-    }).length;
+    const doneCount=dailyChores.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,dStr)]?.done).length;
     const total=dailyChores.length;
     let dotCls='';
     if(!isFuture&&total>0){
@@ -537,7 +545,7 @@ function selectDay(dStr){
     const d=new Date(dStr+'T12:00:00');
     const label=d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
     const isFuture=new Date(dStr)>todayDate;
-    banner.textContent=isFuture?'Viewing '+label+' — chores shown, future day':'Viewing '+label+' — read only';
+    banner.textContent=isFuture?'Viewing '+label+' — future day':'Viewing '+label+' — read only';
     banner.classList.add('show');
   }
   renderDaily();
@@ -636,25 +644,22 @@ function renderDaily(){
   let html='<div class="card">';
   if(isToday) html+=toolbarHTML('Tap house icon to refresh','resetDailyConfirm()');
   html+='<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Streak</span><span>Pts</span><span>Status</span><span></span></div>';
-  ['AM','PM'].forEach(sec=>{
-    let sc=chores.filter(c=>{
-      const s=c.sub_section;
-      return sec==='AM'?(s==='AM'||s==='Morning'||s==='Daytime'||!s):(s==='PM'||s==='Evening');
-    });
+  SECTIONS.forEach(({key,icon})=>{
+    let sc=chores.filter(c=>normalizeSubsection(c.sub_section)===key);
     sc=sortChores(sc,c=>dailyStatusMap[getDailyStatusKey(c.id,selectedDateStr)]?.done||false);
     const doneCount=sc.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,selectedDateStr)]?.done).length;
     const pct=sc.length?Math.round(doneCount/sc.length*100):0;
-    html+=`<div class="sec-row"><i class="ti ${sec==='AM'?'ti-sun':'ti-moon'}" style="font-size:13px"></i>${sec}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
+    html+=`<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${key}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
     if(!sc.length) html+='<div class="empty">No chores yet</div>';
     sc.forEach(c=>{
-      const key=getDailyStatusKey(c.id,selectedDateStr);
-      const done=dailyStatusMap[key]?.done||false;
+      const key2=getDailyStatusKey(c.id,selectedDateStr);
+      const done=dailyStatusMap[key2]?.done||false;
       const clickHandler=readonly?'':`onclick="toggleChore('${c.id}','daily','${selectedDateStr}')"`;
       html+=`<div class="chore-row d-grid${done?' done':''}${readonly?' readonly':''}" ${clickHandler}>
         <div class="cb${done?' on':''}"></div>
         <div class="chore-cell">
           <span class="chore-name">${esc(c.name)}</span>
-          <div class="chore-meta-line"><span class="meta-tag">${c.streak||0} day streak</span>${c.daily_interval>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
+          <div class="chore-meta-line"><span class="meta-tag">${c.streak||0} day streak</span>${(c.daily_interval||1)>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
         </div>
         <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
         <span class="desktop-meta" style="font-size:12px;color:#999">${c.streak||0} days</span>
@@ -668,7 +673,7 @@ function renderDaily(){
     html+=`<div class="add-row">
       <input class="add-input" id="add-daily-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('daily')">
       <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
-      <select class="add-select" id="add-daily-sec"><option>AM</option><option>PM</option></select>
+      <select class="add-select" id="add-daily-sec"><option>Morning</option><option>Midday</option><option>Evening</option></select>
       <button class="add-btn" onclick="addChore('daily')"><i class="ti ti-plus"></i> Add</button>
     </div>`;
   }
@@ -820,8 +825,7 @@ function renderRewards(){
     });
     html+=`<div class="rewards-reset-row"><span class="rewards-reset-link" onclick="resetPerson()">Switch device identity</span></div>`;
     if(allRedemptions.length){
-      html+=`<div class="redemption-log-section">
-        <div class="redemption-log-title">Redemption history</div>`;
+      html+=`<div class="redemption-log-section"><div class="redemption-log-title">Redemption history</div>`;
       allRedemptions.forEach(r=>{
         const d=new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
         html+=`<div class="redemption-log-row">
@@ -879,9 +883,7 @@ function updateStats(){
 }
 
 function openWhoModal(choreId,freq,dateStr){
-  pendingToggleId=choreId;
-  pendingToggleFreq=freq;
-  pendingToggleDateStr=dateStr;
+  pendingToggleId=choreId;pendingToggleFreq=freq;pendingToggleDateStr=dateStr;
   whoModalSelected=currentPerson||null;
   document.querySelectorAll('.who-modal-btn').forEach(b=>b.classList.remove('selected'));
   if(whoModalSelected){
@@ -912,10 +914,7 @@ async function confirmWhoCompleted(){
 async function toggleChore(id,freq,dateStr){
   const key=getDailyStatusKey(id,dateStr);
   const current=dailyStatusMap[key]?.done||false;
-  if(current){
-    await doToggle(id,freq,dateStr,null);
-    return;
-  }
+  if(current){await doToggle(id,freq,dateStr,null);return;}
   const chore=allChores.find(c=>c.id===id);
   if(chore&&(chore.assigned_to==='Both'||chore.assigned_to==='Either')){
     openWhoModal(id,freq,dateStr);
@@ -975,9 +974,7 @@ async function redeemReward(name){
     allRedemptions.unshift(created);
     if(currentPerson==='Jake') jakePoints-=REWARD_COST;
     else marysaPoints-=REWARD_COST;
-    updatePtsDisplay();
-    renderRewards();
-    launchConfetti();
+    updatePtsDisplay();renderRewards();launchConfetti();
     showToast(currentPerson+' redeemed: '+name);
   }catch(e){showToast('Error redeeming');console.error(e);}
 }
@@ -1003,22 +1000,13 @@ function launchConfetti(){
 function setPerson(name){
   currentPerson=name;
   localStorage.setItem('mason_person',name);
-  applyPersonDefaults();
-  applyDarkMode();
-  updatePtsDisplay();
-  renderAll();
-  renderRewards();
+  applyPersonDefaults();applyDarkMode();updatePtsDisplay();renderAll();renderRewards();
 }
 
 function resetPerson(){
   if(!confirm('Switch device identity?')) return;
-  currentPerson=null;
-  localStorage.removeItem('mason_person');
-  currentWho='All';
-  applyPersonDefaults();
-  applyDarkMode();
-  updatePtsDisplay();
-  renderRewards();
+  currentPerson=null;localStorage.removeItem('mason_person');
+  currentWho='All';applyPersonDefaults();applyDarkMode();updatePtsDisplay();renderRewards();
 }
 
 async function resetDailyConfirm(){
@@ -1030,14 +1018,8 @@ async function resetDailyConfirm(){
       if(dailyStatusMap[key]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+todayStr,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    dc.forEach(c=>{
-      const key=getDailyStatusKey(c.id,todayStr);
-      if(dailyStatusMap[key]) dailyStatusMap[key].done=false;
-    });
-    buildDayStrip();
-    renderDaily();
-    updateStats();
-    showToast('Daily chores reset');
+    dc.forEach(c=>{const key=getDailyStatusKey(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
+    buildDayStrip();renderDaily();updateStats();showToast('Daily chores reset');
   }catch(e){showToast('Error resetting');}
 }
 
@@ -1050,10 +1032,7 @@ async function resetWeekly(){
       if(dailyStatusMap[key]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+todayStr,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    wc.forEach(c=>{
-      const key=getDailyStatusKey(c.id,todayStr);
-      if(dailyStatusMap[key]) dailyStatusMap[key].done=false;
-    });
+    wc.forEach(c=>{const key=getDailyStatusKey(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
     renderWeekly();updateStats();showToast('Weekly chores reset');
   }catch(e){showToast('Error resetting');}
 }
@@ -1064,10 +1043,7 @@ async function addChore(freq){
   const name=nameEl.value.trim();
   if(!name) return;
   const extras={};
-  if(freq==='daily'){
-    extras.sub_section=document.getElementById('add-daily-sec').value;
-    extras.daily_interval=1;
-  }
+  if(freq==='daily'){extras.sub_section=document.getElementById('add-daily-sec').value;extras.daily_interval=1;}
   if(freq==='weekly') extras.due_day=document.getElementById('add-weekly-day').value;
   if(freq==='occasional') extras.sort_order=parseInt(document.getElementById('add-occasional-interval').value)||180;
   try{
@@ -1097,8 +1073,7 @@ function openEdit(e,id,freq){
   document.getElementById('m-subsection-field').style.display=freq==='daily'?'':'none';
   if(freq==='daily'){
     document.getElementById('m-interval-daily').value=chore.daily_interval||1;
-    const s=chore.sub_section;
-    document.getElementById('m-subsection').value=(s==='Morning'||s==='Daytime')?'AM':(s==='Evening')?'PM':s||'AM';
+    document.getElementById('m-subsection').value=normalizeSubsection(chore.sub_section);
   }
   if(freq==='weekly'&&chore.due_day) document.getElementById('m-day').value=chore.due_day;
   if((freq==='monthly'||freq==='occasional')&&chore.last_done) document.getElementById('m-lastdone').value=chore.last_done;
@@ -1163,9 +1138,7 @@ async function reloadActivity(){
 }
 
 async function refreshData(){
-  showToast('Refreshing...');
-  await loadAll();
-  showToast('Up to date');
+  showToast('Refreshing...');await loadAll();showToast('Up to date');
 }
 
 function setWho(who,btn){
