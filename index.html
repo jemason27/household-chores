@@ -70,7 +70,7 @@ body.dark .day-dot{background:#3a3a3a}
 .viewing-banner{font-size:11px;color:#888;text-align:center;padding:5px 16px;background:#FFF8EE;border-bottom:1px solid #FDECC8;display:none}
 body.dark .viewing-banner{background:#2a1e00;border-color:#4a3a10;color:#FAC775}
 .viewing-banner.show{display:block}
-.content{flex:1;overflow-y:auto;padding:0 1rem 1.5rem;-webkit-overflow-scrolling:touch}
+.content{flex:1;overflow-y:auto;padding:0 1rem 5rem;-webkit-overflow-scrolling:touch}
 .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;margin-bottom:1rem;transition:background .5s,border-color .5s}
 body.dark .card{background:#242424;border-color:#3a3a3a}
 .tab-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fafafa;transition:background .5s,border-color .5s}
@@ -106,9 +106,13 @@ body.dark .cb{background:#2a2a2a;border-color:#555}
 .chore-cell{display:flex;flex-direction:column;gap:2px;min-width:0}
 .chore-name{font-size:13px;color:#1a1a1a;line-height:1.3;word-break:break-word;transition:color .5s}
 body.dark .chore-name{color:#e0e0e0}
-.chore-meta-line{font-size:11px;color:#aaa;display:none;align-items:center;gap:6px;flex-wrap:wrap}
+.chore-meta-line{font-size:11px;color:#aaa;display:none;align-items:center;gap:4px;flex-wrap:wrap}
 .chore-meta-line .meta-tag{background:#f5f5f5;padding:1px 6px;border-radius:4px;font-size:11px;color:#888;transition:background .5s}
 body.dark .chore-meta-line .meta-tag{background:#333;color:#999}
+.streak-inline{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:#888}
+.flame-icon{display:inline-block;transition:transform .6s cubic-bezier(.34,1.56,.64,1);transform-origin:bottom center}
+.flame-icon.pop{animation:flamePop .6s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes flamePop{0%{transform:scale(1)}40%{transform:scale(1.9)}70%{transform:scale(1.5)}100%{transform:scale(1)}}
 .pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 9px;border-radius:7px;white-space:nowrap}
 .pj{background:#E6F1FB;color:#0C447C}
 .pm{background:#FBEAF0;color:#72243E}
@@ -135,15 +139,6 @@ body.dark .edit-btn{border-color:#3a3a3a;color:#666}
 .chore-row:hover .edit-btn{opacity:1}
 .edit-btn:hover{background:#f0f0f0;color:#666}
 body.dark .edit-btn:hover{background:#333}
-.add-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa;flex-wrap:wrap;transition:background .5s,border-color .5s}
-body.dark .add-row{background:#2a2a2a;border-color:#3a3a3a}
-.add-input{flex:1;min-width:120px;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;transition:background .5s,border-color .5s,color .5s}
-body.dark .add-input{background:#333;border-color:#555;color:#e0e0e0}
-.add-input:focus{border-color:#E8620A}
-.add-select{border:1px solid #ddd;border-radius:8px;padding:7px 10px;font-size:12px;background:#fff;color:#1a1a1a;outline:none;cursor:pointer;transition:background .5s,border-color .5s,color .5s}
-body.dark .add-select{background:#333;border-color:#555;color:#e0e0e0}
-.add-btn{padding:7px 14px;border-radius:8px;border:1px solid #E8620A;background:#E8620A;font-size:12px;font-weight:500;cursor:pointer;color:#fff;white-space:nowrap}
-.add-btn:hover{opacity:.85}
 .log-row{display:grid;align-items:center;padding:8px 16px;border-bottom:1px solid #f5f5f5;gap:8px;transition:border-color .5s}
 body.dark .log-row{border-color:#3a3a3a}
 .log-row:last-child{border-bottom:none}
@@ -180,7 +175,32 @@ body.dark .who-modal-btn{background:#333;border-color:#555;color:#e0e0e0}
 .who-modal-btn:hover{border-color:#E8620A}
 .who-modal-btn.selected{border:2px solid #E8620A;background:#FFF8EE;color:#E8620A}
 body.dark .who-modal-btn.selected{background:#2a1e00}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#E8620A;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.bottom-add-bar{position:fixed;bottom:0;left:0;right:0;padding:.75rem 1rem;background:#fff;border-top:1px solid #eee;z-index:20;transition:background .5s,border-color .5s}
+body.dark .bottom-add-bar{background:#1a1a1a;border-color:#3a3a3a}
+.bottom-add-bar-inner{max-width:780px;margin:0 auto}
+.add-chore-btn{width:100%;padding:12px;border-radius:10px;border:none;background:#E8620A;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s}
+.add-chore-btn:hover{opacity:.9}
+.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center}
+.sheet-overlay.open{display:flex}
+.sheet{background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:780px;padding:1rem 1.25rem 2rem;max-height:85vh;overflow-y:auto;transition:background .5s}
+body.dark .sheet{background:#242424}
+.sheet-handle{width:40px;height:4px;border-radius:2px;background:#ddd;margin:0 auto .75rem}
+body.dark .sheet-handle{background:#444}
+.sheet-title{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:1.25rem;transition:color .5s}
+body.dark .sheet-title{color:#f0f0f0}
+.sheet-field{margin-bottom:14px}
+.sheet-label{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.sheet-input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;background:#fff;color:#1a1a1a;outline:none;transition:background .5s,border-color .5s,color .5s}
+body.dark .sheet-input{background:#333;border-color:#555;color:#e0e0e0}
+.sheet-input:focus{border-color:#E8620A}
+.seg-group{display:flex;gap:6px;flex-wrap:wrap}
+.seg-btn{padding:6px 12px;border-radius:8px;border:1px solid #ddd;background:#f5f5f5;font-size:12px;font-weight:500;color:#666;cursor:pointer;transition:all .15s}
+body.dark .seg-btn{background:#333;border-color:#555;color:#aaa}
+.seg-btn.active{background:#E8620A;color:#fff;border-color:#E8620A}
+.sheet-save{width:100%;padding:13px;border-radius:10px;border:none;background:#E8620A;color:#fff;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px}
+.sheet-cancel{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;background:transparent;font-size:13px;color:#888;cursor:pointer;margin-top:8px;transition:border-color .5s,color .5s}
+body.dark .sheet-cancel{border-color:#444;color:#666}
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:#E8620A;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 .loading{text-align:center;padding:3rem;color:#999;font-size:14px}
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:13px}
@@ -243,7 +263,7 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
   .tab{font-size:10px;padding:5px 1px}
   .day-btn{padding:5px 1px}
   .day-num{font-size:13px}
-  .content{padding:0 .75rem 1.5rem}
+  .content{padding:0 .75rem 5rem}
   .d-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 58px 26px}
   .w-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 58px 26px}
   .m-grid{grid-template-columns:26px minmax(0,1fr) 58px 42px 66px 26px}
@@ -253,11 +273,9 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
   .chore-row .desktop-meta{display:none}
   .chore-meta-line{display:flex}
   .edit-btn{opacity:1;width:22px;height:22px}
-  .add-row{gap:6px;padding:8px 12px}
-  .add-select{padding:7px 6px;font-size:11px}
-  .add-btn{padding:7px 10px;font-size:11px}
   .log-row .hide-mobile{display:none}
   .redemption-log-row{grid-template-columns:62px minmax(0,1fr) 60px}
+  .bottom-add-bar{padding:.6rem .75rem}
 }
 </style>
 </head>
@@ -302,6 +320,88 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
     <div id="tab-occasional" style="display:none"><div class="loading">Loading...</div></div>
     <div id="tab-rewards" style="display:none"><div class="loading">Loading...</div></div>
     <div id="tab-activity" style="display:none"><div class="loading">Loading...</div></div>
+  </div>
+</div>
+
+<div class="bottom-add-bar" id="bottom-add-bar">
+  <div class="bottom-add-bar-inner">
+    <button class="add-chore-btn" onclick="openSheet()"><i class="ti ti-plus"></i> Add chore</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="sheet-overlay">
+  <div class="sheet" id="sheet-inner">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Add chore</div>
+    <div class="sheet-field">
+      <div class="sheet-label">Chore name</div>
+      <input class="sheet-input" id="sheet-name" placeholder="e.g. Clean dog bowls" onkeydown="if(event.key==='Enter')submitSheet()">
+    </div>
+    <div class="sheet-field">
+      <div class="sheet-label">Tab</div>
+      <div class="seg-group" id="sheet-tab-seg">
+        <div class="seg-btn active" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Daily</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Weekly</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Monthly</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Occasional</div>
+      </div>
+    </div>
+    <div id="sheet-daily-fields">
+      <div class="sheet-field">
+        <div class="sheet-label">Section</div>
+        <div class="seg-group" id="sheet-sec-seg">
+          <div class="seg-btn active" onclick="sheetSelectSeg('sheet-sec-seg',this)">Morning</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-sec-seg',this)">Midday</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-sec-seg',this)">Evening</div>
+        </div>
+      </div>
+      <div class="sheet-field">
+        <div class="sheet-label">Repeat every</div>
+        <div class="seg-group" id="sheet-rep-seg">
+          <div class="seg-btn active" onclick="sheetSelectSeg('sheet-rep-seg',this)">1 day</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-rep-seg',this)">2 days</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-rep-seg',this)">3 days</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-rep-seg',this)">4 days</div>
+        </div>
+      </div>
+    </div>
+    <div id="sheet-weekly-fields" style="display:none">
+      <div class="sheet-field">
+        <div class="sheet-label">Due day</div>
+        <div class="seg-group" id="sheet-day-seg">
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Sun</div>
+          <div class="seg-btn active" onclick="sheetSelectSeg('sheet-day-seg',this)">Mon</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Tue</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Wed</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Thu</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Fri</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-day-seg',this)">Sat</div>
+        </div>
+      </div>
+    </div>
+    <div id="sheet-occasional-fields" style="display:none">
+      <div class="sheet-field">
+        <div class="sheet-label">Repeat interval</div>
+        <div class="seg-group" id="sheet-int-seg">
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-int-seg',this)">2 months</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-int-seg',this)">3 months</div>
+          <div class="seg-btn active" onclick="sheetSelectSeg('sheet-int-seg',this)">6 months</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-int-seg',this)">Yearly</div>
+          <div class="seg-btn" onclick="sheetSelectSeg('sheet-int-seg',this)">2 years</div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-field">
+      <div class="sheet-label">Assigned to</div>
+      <div class="seg-group" id="sheet-assign-seg">
+        <div class="seg-btn active" onclick="sheetSelectSeg('sheet-assign-seg',this)">Both</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-assign-seg',this)">Jake</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-assign-seg',this)">Marysa</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-assign-seg',this)">Either</div>
+      </div>
+    </div>
+    <button class="sheet-save" onclick="submitSheet()">Add chore</button>
+    <button class="sheet-cancel" onclick="closeSheet()">Cancel</button>
   </div>
 </div>
 
@@ -377,23 +477,46 @@ const REWARD_COST=50;
 const ASSIGN_ORDER={'Jake':0,'Marysa':1,'Either':2,'Both':3};
 const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const SECTIONS=[
-  {key:'Morning', icon:'ti-sun'},
-  {key:'Midday',  icon:'ti-sun-high'},
-  {key:'Evening', icon:'ti-moon'}
+  {key:'Morning',icon:'ti-sun'},
+  {key:'Midday',icon:'ti-sun-high'},
+  {key:'Evening',icon:'ti-moon'}
 ];
+const STREAK_TIERS=[1,4,7,10];
+
+function flameForStreak(streak){
+  if(!streak||streak<1) return '';
+  if(streak>=10) return `<svg width="13" height="17" viewBox="0 0 13 17" fill="none"><path d="M6.5 16C4 16 2.5 14.2 2.5 12.2C2.5 10.6 3.5 9.4 4.3 8.3C4.7 7.7 4.8 6.9 4.6 6.2C5.6 7 6 8.1 5.8 9.1C6.8 8 7.2 6.6 7 5.4C8.4 6.5 9.2 8 9.2 10C9.9 9.2 10.3 7.9 10.1 6.8C11.4 8 11.5 9.8 11.5 11C11.5 13.8 9.2 16 6.5 16Z" fill="#993C1D"/><path d="M6.5 15.5C4.5 15.5 3.5 14 3.5 12.5C3.5 11.3 4.2 10.2 5.2 9.5C5 10.3 5.6 11.2 6.5 11.2C5.9 10.3 6.3 9.2 7.2 8.9C7 9.8 7.7 10.7 8.6 10.7C8.3 9.7 9 8.8 10 8.6C9.7 10 9.1 11.4 8.1 12.4C9.3 11.5 10.1 9.9 9.6 8.5C10.3 9.4 10.5 10.8 10.5 12C10.5 14 8.8 15.5 6.5 15.5Z" fill="#E8620A"/><path d="M6.5 15C5.2 15 4.5 14.1 4.5 13C4.5 12.1 5.1 11.3 6 11C5.8 11.8 6.5 12.5 7.3 12.3C6.8 11.6 7.2 10.7 8.1 10.7C7.8 11.5 8.5 12.3 9.3 12C8.7 13.1 7.7 14.4 6.5 15Z" fill="#FAC775"/><path d="M6.5 14.5C5.7 14.5 5.2 13.9 5.2 13.1C5.2 12.4 5.7 11.9 6.4 11.7C6.2 12.3 6.8 12.9 7.5 12.7C7.1 13.4 6.8 14 6.5 14.5Z" fill="#fff" opacity="0.7"/></svg>`;
+  if(streak>=7) return `<svg width="12" height="16" viewBox="0 0 12 16" fill="none"><path d="M6 15C3.8 15 2.5 13.3 2.5 11.5C2.5 10 3.4 8.9 4.1 7.9C4.5 7.3 4.6 6.6 4.4 5.9C5.3 6.7 5.7 7.7 5.5 8.7C6.4 7.7 6.8 6.4 6.6 5.2C7.9 6.2 8.6 7.6 8.6 9.4C9.2 8.7 9.6 7.6 9.4 6.5C10.5 7.6 10.7 9.2 10.7 10.3C10.7 12.9 8.5 15 6 15Z" fill="#D85A30"/><path d="M6 14.5C4.2 14.5 3.2 13.2 3.2 11.8C3.2 10.6 3.9 9.6 4.8 9C4.6 9.8 5.2 10.6 6 10.6C5.5 9.8 5.8 8.8 6.7 8.5C6.5 9.3 7.1 10.1 7.9 10.1C7.7 9.2 8.3 8.4 9.1 8.2C8.9 9.4 8.3 10.7 7.5 11.5C8.5 10.8 9.2 9.4 8.8 8.1C9.4 9 9.6 10.2 9.6 11.2C9.6 13.2 8 14.5 6 14.5Z" fill="#E8620A"/><path d="M6 14C4.8 14 4.1 13.2 4.1 12.2C4.1 11.3 4.7 10.6 5.5 10.3C5.3 11 6 11.7 6.8 11.5C6.3 10.9 6.7 10.1 7.6 10.1C7.3 10.8 7.9 11.6 8.7 11.3C8.1 12.3 7.2 13.4 6 14Z" fill="#FAC775"/><path d="M6 13.5C5.3 13.5 4.9 13 4.9 12.3C4.9 11.7 5.3 11.3 5.9 11.1C5.7 11.7 6.3 12.2 6.9 12C6.6 12.6 6.3 13.1 6 13.5Z" fill="#fff" opacity="0.65"/></svg>`;
+  if(streak>=4) return `<svg width="11" height="15" viewBox="0 0 11 15" fill="none"><path d="M5.5 14C3.5 14 2.2 12.5 2.2 10.8C2.2 9.5 3 8.5 3.7 7.6C4 7 4.1 6.3 3.9 5.7C4.7 6.4 5.1 7.3 4.9 8.2C5.7 7.3 6 6.1 5.9 5C7 5.9 7.6 7.2 7.6 8.8C8.2 8.1 8.5 7.1 8.3 6.1C9.3 7.1 9.5 8.6 9.5 9.6C9.5 12 7.7 14 5.5 14Z" fill="#E8620A" opacity="0.8"/><path d="M5.5 13.5C4 13.5 3.2 12.4 3.2 11.1C3.2 10.1 3.8 9.2 4.6 8.7C4.4 9.4 5 10.1 5.8 10.1C5.2 9.3 5.6 8.3 6.4 8C6.2 8.8 6.8 9.6 7.6 9.6C7.4 8.8 8 8 8.8 7.8C8.5 9 8 10.3 7.1 11.1C8.1 10.4 8.7 9.1 8.3 7.9C9 8.7 9.1 9.9 9.1 10.8C9.1 12.5 7.5 13.5 5.5 13.5Z" fill="#FAC775"/></svg>`;
+  return `<svg width="10" height="13" viewBox="0 0 10 13" fill="none"><path d="M5 12C3.2 12 2 10.7 2 9.2C2 8 2.7 7.1 3.3 6.3C3.6 5.8 3.6 5.2 3.5 4.7C4.2 5.3 4.5 6.1 4.3 6.9C5 6.1 5.3 5 5.2 4C6.2 4.9 6.7 6 6.7 7.5C7.2 6.9 7.5 6 7.3 5.1C8.2 6 8.4 7.3 8.4 8.2C8.4 10.3 6.8 12 5 12Z" fill="#EF9F27" opacity="0.65"/></svg>`;
+}
+
+function flameStage(streak){
+  if(!streak||streak<1) return 0;
+  if(streak>=10) return 4;
+  if(streak>=7) return 3;
+  if(streak>=4) return 2;
+  return 1;
+}
+
+function animateFlame(choreId){
+  const el=document.querySelector(`[data-flame-id="${choreId}"]`);
+  if(!el) return;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  setTimeout(()=>el.classList.remove('pop'),700);
+}
 
 let allChores=[],dailyStatusMap={},activeChoreId=null,activeFreq=null;
 let currentWho='All',activeTab='daily';
 let currentPerson=localStorage.getItem('mason_person')||null;
 let jakePoints=0,marysaPoints=0,jakeWeekPts=0,marysaWeekPts=0;
 let allRedemptions=[];
-
 const todayDate=new Date();
 const todayStr=todayDate.toISOString().split('T')[0];
 let selectedDateStr=todayStr;
-
-let pendingToggleId=null,pendingToggleFreq=null,pendingToggleDateStr=null;
-let whoModalSelected=null;
+let pendingToggleId=null,pendingToggleFreq=null,pendingToggleDateStr=null,whoModalSelected=null;
 
 function dateToStr(d){return d.toISOString().split('T')[0];}
 
@@ -401,15 +524,11 @@ function getWeekDates(){
   const dates=[];
   const d=new Date(todayDate);
   d.setDate(d.getDate()-d.getDay());
-  for(let i=0;i<7;i++){
-    const day=new Date(d);
-    day.setDate(d.getDate()+i);
-    dates.push(day);
-  }
+  for(let i=0;i<7;i++){const day=new Date(d);day.setDate(d.getDate()+i);dates.push(day);}
   return dates;
 }
 
-function getDailyStatusKey(choreId,dateStr){return choreId+'|'+dateStr;}
+function getDSK(choreId,dateStr){return choreId+'|'+dateStr;}
 
 function normalizeSubsection(s){
   if(!s) return 'Morning';
@@ -424,7 +543,7 @@ function isDueOnDate(chore,dateStr){
   const interval=chore.daily_interval||1;
   if(interval===1) return true;
   const ref=new Date(chore.last_done||chore.created_at||todayStr);
-  const target=new Date(dateStr);
+  const target=new Date(dateStr+'T12:00:00');
   const diffDays=Math.round((target-ref)/86400000);
   return diffDays%interval===0;
 }
@@ -445,10 +564,7 @@ function getSunTimes(date){
   const H=Math.acos(cosH)/rad;
   const transit=(Js+0.0053*Math.sin(M)-0.0069*Math.sin(2*lam))-PHOENIX_LNG/360;
   const base=new Date(d);base.setHours(0,0,0,0);
-  return{
-    sunrise:new Date(base.getTime()+((transit-H/360)%1)*86400000),
-    sunset:new Date(base.getTime()+((transit+H/360)%1)*86400000)
-  };
+  return{sunrise:new Date(base.getTime()+((transit-H/360)%1)*86400000),sunset:new Date(base.getTime()+((transit+H/360)%1)*86400000)};
 }
 
 function applyDarkMode(){
@@ -481,16 +597,11 @@ async function loadAll(){
       api('redemptions?order=created_at.desc')
     ]);
     allChores=(chores||[]).map(c=>{
-      if(c.frequency==='daily'){
-        return{...c,sub_section:normalizeSubsection(c.sub_section)};
-      }
+      if(c.frequency==='daily') return{...c,sub_section:normalizeSubsection(c.sub_section)};
       return c;
     });
     dailyStatusMap={};
-    (statuses||[]).forEach(s=>{
-      const key=getDailyStatusKey(s.chore_id,s.status_date);
-      dailyStatusMap[key]=s;
-    });
+    (statuses||[]).forEach(s=>{dailyStatusMap[getDSK(s.chore_id,s.status_date)]=s;});
     allRedemptions=redemptions||[];
     calcPoints(pts||[],redemptions||[]);
     applyPersonDefaults();
@@ -513,19 +624,16 @@ function setAppDate(){
 function buildDayStrip(){
   const strip=document.getElementById('day-strip');
   strip.innerHTML='';
-  getWeekDates().forEach((d)=>{
+  getWeekDates().forEach(d=>{
     const dStr=dateToStr(d);
     const isToday=dStr===todayStr;
     const isSelected=dStr===selectedDateStr;
     const isFuture=d>todayDate&&!isToday;
     const dailyChores=allChores.filter(c=>c.frequency==='daily'&&isDueOnDate(c,dStr));
-    const doneCount=dailyChores.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,dStr)]?.done).length;
+    const doneCount=dailyChores.filter(c=>dailyStatusMap[getDSK(c.id,dStr)]?.done).length;
     const total=dailyChores.length;
     let dotCls='';
-    if(!isFuture&&total>0){
-      if(doneCount===total) dotCls='full';
-      else if(doneCount>0) dotCls='partial';
-    }
+    if(!isFuture&&total>0){if(doneCount===total)dotCls='full';else if(doneCount>0)dotCls='partial';}
     const btn=document.createElement('div');
     btn.className='day-btn'+(isSelected?' active':'')+(isToday&&!isSelected?' is-today':'');
     btn.innerHTML=`<div class="day-name">${DAY_NAMES[d.getDay()]}</div><div class="day-num">${d.getDate()}</div><div class="day-dot-wrap"><div class="day-dot${dotCls?' '+dotCls:''}"></div></div>`;
@@ -539,17 +647,15 @@ function selectDay(dStr){
   buildDayStrip();
   const banner=document.getElementById('viewing-banner');
   if(dStr===todayStr){
-    banner.classList.remove('show');
-    banner.textContent='';
+    banner.classList.remove('show');banner.textContent='';
   }else{
     const d=new Date(dStr+'T12:00:00');
     const label=d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-    const isFuture=new Date(dStr)>todayDate;
+    const isFuture=new Date(dStr+'T12:00:00')>todayDate;
     banner.textContent=isFuture?'Viewing '+label+' — future day':'Viewing '+label+' — read only';
     banner.classList.add('show');
   }
-  renderDaily();
-  updateStats();
+  renderDaily();updateStats();
 }
 
 function applyPersonDefaults(){
@@ -578,12 +684,8 @@ function calcPoints(pts,redemptions){
     if(p.person==='Jake'){jakePoints+=p.amount;if(new Date()-new Date(p.created_at)<weekMs)jakeWeekPts+=p.amount;}
     else{marysaPoints+=p.amount;if(new Date()-new Date(p.created_at)<weekMs)marysaWeekPts+=p.amount;}
   });
-  redemptions.forEach(r=>{
-    if(r.person==='Jake') jakePoints-=r.points_spent;
-    else marysaPoints-=r.points_spent;
-  });
-  jakePoints=Math.max(0,jakePoints);
-  marysaPoints=Math.max(0,marysaPoints);
+  redemptions.forEach(r=>{if(r.person==='Jake')jakePoints-=r.points_spent;else marysaPoints-=r.points_spent;});
+  jakePoints=Math.max(0,jakePoints);marysaPoints=Math.max(0,marysaPoints);
 }
 
 function updatePtsDisplay(){
@@ -621,7 +723,7 @@ function intervalLabel(days){
 }
 
 function occasionalStatus(chore){
-  const done=dailyStatusMap[getDailyStatusKey(chore.id,todayStr)]?.done||false;
+  const done=dailyStatusMap[getDSK(chore.id,todayStr)]?.done||false;
   if(done) return{label:'Done',cls:'ps'};
   if(!chore.last_done) return{label:'Not set',cls:'pp'};
   const interval=parseInt(chore.sort_order)||180;
@@ -636,9 +738,15 @@ function toolbarHTML(label,resetFn){
   return `<div class="tab-toolbar"><span class="tab-toolbar-label">${label}</span><button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button></div>`;
 }
 
+function streakHTML(chore,animate){
+  const streak=chore.streak||0;
+  if(streak<1) return `<span class="streak-inline">0 days</span>`;
+  const flame=flameForStreak(streak);
+  return `<span class="streak-inline"><span class="flame-icon" data-flame-id="${chore.id}">${flame}</span>${streak} day${streak===1?'':'s'}</span>`;
+}
+
 function renderDaily(){
   const isToday=selectedDateStr===todayStr;
-  const isFuture=new Date(selectedDateStr)>todayDate&&!isToday;
   const readonly=!isToday;
   let chores=choresFor('daily').filter(c=>isDueOnDate(c,selectedDateStr));
   let html='<div class="card">';
@@ -646,20 +754,20 @@ function renderDaily(){
   html+='<div class="col-head d-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Streak</span><span>Pts</span><span>Status</span><span></span></div>';
   SECTIONS.forEach(({key,icon})=>{
     let sc=chores.filter(c=>normalizeSubsection(c.sub_section)===key);
-    sc=sortChores(sc,c=>dailyStatusMap[getDailyStatusKey(c.id,selectedDateStr)]?.done||false);
-    const doneCount=sc.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,selectedDateStr)]?.done).length;
+    sc=sortChores(sc,c=>dailyStatusMap[getDSK(c.id,selectedDateStr)]?.done||false);
+    const doneCount=sc.filter(c=>dailyStatusMap[getDSK(c.id,selectedDateStr)]?.done).length;
     const pct=sc.length?Math.round(doneCount/sc.length*100):0;
     html+=`<div class="sec-row"><i class="ti ${icon}" style="font-size:13px"></i>${key}<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-lbl">${doneCount}/${sc.length}</span></div>`;
     if(!sc.length) html+='<div class="empty">No chores yet</div>';
     sc.forEach(c=>{
-      const key2=getDailyStatusKey(c.id,selectedDateStr);
+      const key2=getDSK(c.id,selectedDateStr);
       const done=dailyStatusMap[key2]?.done||false;
       const clickHandler=readonly?'':`onclick="toggleChore('${c.id}','daily','${selectedDateStr}')"`;
       html+=`<div class="chore-row d-grid${done?' done':''}${readonly?' readonly':''}" ${clickHandler}>
         <div class="cb${done?' on':''}"></div>
         <div class="chore-cell">
           <span class="chore-name">${esc(c.name)}</span>
-          <div class="chore-meta-line"><span class="meta-tag">${c.streak||0} day streak</span>${(c.daily_interval||1)>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
+          <div class="chore-meta-line">${streakHTML(c,false)}${(c.daily_interval||1)>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
         </div>
         <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
         <span class="desktop-meta" style="font-size:12px;color:#999">${c.streak||0} days</span>
@@ -669,26 +777,18 @@ function renderDaily(){
       </div>`;
     });
   });
-  if(isToday){
-    html+=`<div class="add-row">
-      <input class="add-input" id="add-daily-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('daily')">
-      <select class="add-select" id="add-daily-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
-      <select class="add-select" id="add-daily-sec"><option>Morning</option><option>Midday</option><option>Evening</option></select>
-      <button class="add-btn" onclick="addChore('daily')"><i class="ti ti-plus"></i> Add</button>
-    </div>`;
-  }
   html+='</div>';
   document.getElementById('tab-daily').innerHTML=html;
 }
 
 function renderWeekly(){
-  const chores=sortChores(choresFor('weekly'),c=>dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false);
+  const chores=sortChores(choresFor('weekly'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
   let html='<div class="card">';
   html+=toolbarHTML('Reset clears all weekly checkboxes — tap every Sunday','resetWeekly()');
   html+='<div class="col-head w-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Due day</span><span>Pts</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No weekly chores yet</div>';
   chores.forEach(c=>{
-    const done=dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false;
+    const done=dailyStatusMap[getDSK(c.id,todayStr)]?.done||false;
     html+=`<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly','${todayStr}')">
       <div class="cb${done?' on':''}"></div>
       <div class="chore-cell">
@@ -702,22 +802,17 @@ function renderWeekly(){
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html+=`<div class="add-row">
-    <input class="add-input" id="add-weekly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('weekly')">
-    <select class="add-select" id="add-weekly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
-    <select class="add-select" id="add-weekly-day"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
-    <button class="add-btn" onclick="addChore('weekly')"><i class="ti ti-plus"></i> Add</button>
-  </div></div>`;
+  html+='</div>';
   document.getElementById('tab-weekly').innerHTML=html;
 }
 
 function renderMonthly(){
-  const chores=sortChores(choresFor('monthly'),c=>dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false);
+  const chores=sortChores(choresFor('monthly'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
   let html='<div class="card">';
   html+='<div class="col-head m-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Last done</span><span>Pts</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No monthly chores yet</div>';
   chores.forEach(c=>{
-    const done=dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false;
+    const done=dailyStatusMap[getDSK(c.id,todayStr)]?.done||false;
     let sl,sc;
     if(done){sl='Done';sc='ps';}
     else if(!c.last_done){sl='Not set';sc='pp';}
@@ -739,22 +834,18 @@ function renderMonthly(){
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','monthly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html+=`<div class="add-row">
-    <input class="add-input" id="add-monthly-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('monthly')">
-    <select class="add-select" id="add-monthly-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
-    <button class="add-btn" onclick="addChore('monthly')"><i class="ti ti-plus"></i> Add</button>
-  </div></div>`;
+  html+='</div>';
   document.getElementById('tab-monthly').innerHTML=html;
 }
 
 function renderOccasional(){
-  const chores=sortChores(choresFor('occasional'),c=>dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false);
+  const chores=sortChores(choresFor('occasional'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
   let html='<div class="card">';
   html+='<div class="col-head o-grid"><span></span><span>Chore</span><span>Assigned</span><span class="desktop-meta">Last done</span><span>Pts</span><span>Status</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No occasional chores yet</div>';
   chores.forEach(c=>{
     const{label,cls}=occasionalStatus(c);
-    const done=dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done||false;
+    const done=dailyStatusMap[getDSK(c.id,todayStr)]?.done||false;
     const ld=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}):'—';
     const interval=parseInt(c.sort_order)||180;
     html+=`<div class="chore-row o-grid${done?' done':''}" onclick="toggleChore('${c.id}','occasional','${todayStr}')">
@@ -770,18 +861,7 @@ function renderOccasional(){
       <button class="edit-btn" onclick="openEdit(event,'${c.id}','occasional')"><i class="ti ti-edit" style="font-size:13px"></i></button>
     </div>`;
   });
-  html+=`<div class="add-row">
-    <input class="add-input" id="add-occasional-name" placeholder="Add a chore..." onkeydown="if(event.key==='Enter')addChore('occasional')">
-    <select class="add-select" id="add-occasional-assign"><option>Both</option><option>Jake</option><option>Marysa</option><option>Either</option></select>
-    <select class="add-select" id="add-occasional-interval">
-      <option value="60">Every 2 months</option>
-      <option value="90">Every 3 months</option>
-      <option value="180" selected>Every 6 months</option>
-      <option value="365">Every year</option>
-      <option value="730">Every 2 years</option>
-    </select>
-    <button class="add-btn" onclick="addChore('occasional')"><i class="ti ti-plus"></i> Add</button>
-  </div></div>`;
+  html+='</div>';
   document.getElementById('tab-occasional').innerHTML=html;
 }
 
@@ -796,7 +876,7 @@ function renderRewards(){
   if(!setupDone){
     html+=`<div class="rewards-setup">
       <div class="rewards-setup-title">Who are you on this device?</div>
-      <div class="rewards-setup-sub">Saved locally — only need to do this once. Tap "Switch device identity" below to change.</div>
+      <div class="rewards-setup-sub">Saved locally — only need to do this once.</div>
       <div class="setup-btns">
         <div class="setup-btn" onclick="setPerson('Jake')"><div class="setup-avatar av-j">JM</div><div class="setup-name">Jake</div><div class="setup-role">This is my phone</div></div>
         <div class="setup-btn" onclick="setPerson('Marysa')"><div class="setup-avatar av-m">MM</div><div class="setup-name">Marysa</div><div class="setup-role">This is my phone</div></div>
@@ -818,21 +898,14 @@ function renderRewards(){
     html+='<div class="confetti-wrap" id="confetti-zone"></div>';
     REWARDS.forEach(r=>{
       const canAfford=myPts>=REWARD_COST;
-      html+=`<div class="reward-row">
-        <div><div class="reward-name">${esc(r)}</div><div class="reward-cost">${REWARD_COST} pts</div></div>
-        <button class="redeem-btn" ${canAfford?'':'disabled'} onclick="redeemReward('${esc(r)}')">Redeem</button>
-      </div>`;
+      html+=`<div class="reward-row"><div><div class="reward-name">${esc(r)}</div><div class="reward-cost">${REWARD_COST} pts</div></div><button class="redeem-btn" ${canAfford?'':'disabled'} onclick="redeemReward('${esc(r)}')">Redeem</button></div>`;
     });
     html+=`<div class="rewards-reset-row"><span class="rewards-reset-link" onclick="resetPerson()">Switch device identity</span></div>`;
     if(allRedemptions.length){
       html+=`<div class="redemption-log-section"><div class="redemption-log-title">Redemption history</div>`;
       allRedemptions.forEach(r=>{
         const d=new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-        html+=`<div class="redemption-log-row">
-          <span class="date-lbl">${d}</span>
-          <span class="chore-name" style="font-size:12px">${esc(r.reward_name)}</span>
-          <span class="pill ${pillClass(r.person)}">${r.person}</span>
-        </div>`;
+        html+=`<div class="redemption-log-row"><span class="date-lbl">${d}</span><span class="chore-name" style="font-size:12px">${esc(r.reward_name)}</span><span class="pill ${pillClass(r.person)}">${r.person}</span></div>`;
       });
       html+='</div>';
     }
@@ -855,13 +928,7 @@ function renderActivity(comps,redemptions){
     const ptsHtml=e.pts>0?`<span class="pts-badge earned">+${e.pts}</span>`:`<span class="pts-badge spent">${e.pts}</span>`;
     const typeLabel=e.type==='redeem'?'Reward':e.freq?e.freq.charAt(0).toUpperCase()+e.freq.slice(1):'—';
     const typeCls=e.type==='redeem'?'to':e.freq==='daily'?'td':e.freq==='weekly'?'tw':e.freq==='monthly'?'tm':'to';
-    html+=`<div class="log-row l-grid">
-      <span class="date-lbl">${d}</span>
-      <span class="chore-name" style="font-size:12px">${esc(e.chore)}</span>
-      <span class="pill ${pillClass(e.person)}">${e.person}</span>
-      ${ptsHtml}
-      <span class="hide-mobile"><span class="type-badge ${typeCls}">${typeLabel}</span></span>
-    </div>`;
+    html+=`<div class="log-row l-grid"><span class="date-lbl">${d}</span><span class="chore-name" style="font-size:12px">${esc(e.chore)}</span><span class="pill ${pillClass(e.person)}">${e.person}</span>${ptsHtml}<span class="hide-mobile"><span class="type-badge ${typeCls}">${typeLabel}</span></span></div>`;
   });
   html+='</div>';
   document.getElementById('tab-activity').innerHTML=html;
@@ -871,12 +938,12 @@ function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasion
 
 function updateStats(){
   const daily=allChores.filter(c=>c.frequency==='daily'&&isDueOnDate(c,todayStr));
-  const doneDaily=daily.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done).length;
+  const doneDaily=daily.filter(c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done).length;
   const pctD=daily.length?Math.round(doneDaily/daily.length*100):0;
   document.getElementById('s-today-pct').textContent=pctD+'%';
   document.getElementById('s-today-sub').textContent=doneDaily+' of '+daily.length+' done';
   const weekly=allChores.filter(c=>c.frequency==='weekly');
-  const doneWeekly=weekly.filter(c=>dailyStatusMap[getDailyStatusKey(c.id,todayStr)]?.done).length;
+  const doneWeekly=weekly.filter(c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done).length;
   const pctW=weekly.length?Math.round(doneWeekly/weekly.length*100):0;
   document.getElementById('s-week-pct').textContent=pctW+'%';
   document.getElementById('s-week-sub').textContent=doneWeekly+' of '+weekly.length+' done';
@@ -886,10 +953,7 @@ function openWhoModal(choreId,freq,dateStr){
   pendingToggleId=choreId;pendingToggleFreq=freq;pendingToggleDateStr=dateStr;
   whoModalSelected=currentPerson||null;
   document.querySelectorAll('.who-modal-btn').forEach(b=>b.classList.remove('selected'));
-  if(whoModalSelected){
-    const el=document.getElementById('wm-'+whoModalSelected.toLowerCase());
-    if(el) el.classList.add('selected');
-  }
+  if(whoModalSelected){const el=document.getElementById('wm-'+whoModalSelected.toLowerCase());if(el)el.classList.add('selected');}
   document.getElementById('who-modal').classList.add('open');
 }
 
@@ -912,7 +976,7 @@ async function confirmWhoCompleted(){
 }
 
 async function toggleChore(id,freq,dateStr){
-  const key=getDailyStatusKey(id,dateStr);
+  const key=getDSK(id,dateStr);
   const current=dailyStatusMap[key]?.done||false;
   if(current){await doToggle(id,freq,dateStr,null);return;}
   const chore=allChores.find(c=>c.id===id);
@@ -925,7 +989,7 @@ async function toggleChore(id,freq,dateStr){
 }
 
 async function doToggle(id,freq,dateStr,completedBy){
-  const key=getDailyStatusKey(id,dateStr);
+  const key=getDSK(id,dateStr);
   const current=dailyStatusMap[key]?.done||false;
   const newVal=!current;
   try{
@@ -935,9 +999,10 @@ async function doToggle(id,freq,dateStr,completedBy){
       await api('daily_status','POST',{chore_id:id,status_date:dateStr,done:newVal});
     }
     const chore=allChores.find(c=>c.id===id);
+    let newStreak=chore?.streak||0;
     if(newVal&&chore){
       const updates={};
-      if(freq==='daily') updates.streak=(chore.streak||0)+1;
+      if(freq==='daily'){newStreak=(chore.streak||0)+1;updates.streak=newStreak;}
       if(freq==='monthly'||freq==='occasional') updates.last_done=dateStr;
       if(Object.keys(updates).length){await api('chores?id=eq.'+id,'PATCH',updates);Object.assign(chore,updates);}
       const loggedBy=completedBy||currentPerson||chore.assigned_to;
@@ -953,6 +1018,13 @@ async function doToggle(id,freq,dateStr,completedBy){
       }
       updatePtsDisplay();
       if(activeTab==='rewards') renderRewards();
+      if(freq==='daily'){
+        const prevStage=flameStage((chore.streak||1)-1);
+        const newStage=flameStage(newStreak);
+        if(newStage>prevStage){
+          setTimeout(()=>animateFlame(id),100);
+        }
+      }
     }
     dailyStatusMap[key]={done:newVal,chore_id:id,status_date:dateStr};
     buildDayStrip();
@@ -961,6 +1033,11 @@ async function doToggle(id,freq,dateStr,completedBy){
     else if(freq==='monthly') renderMonthly();
     else renderOccasional();
     updateStats();
+    if(newVal&&freq==='daily'&&chore){
+      const prevStage=flameStage((chore.streak||1)-1);
+      const newStage=flameStage(chore.streak||0);
+      if(newStage>prevStage) setTimeout(()=>animateFlame(id),80);
+    }
   }catch(e){showToast('Error saving');console.error(e);}
 }
 
@@ -984,22 +1061,19 @@ function launchConfetti(){
   if(!zone) return;
   const colors=['#E8620A','#FFE099','#3B6D11','#0C447C','#72243E','#FBEAF0','#EAF3DE'];
   for(let i=0;i<36;i++){
-    const p=document.createElement('div');
-    p.className='cp';
+    const p=document.createElement('div');p.className='cp';
     p.style.left=Math.random()*100+'%';
     p.style.background=colors[Math.floor(Math.random()*colors.length)];
     p.style.animationDelay=Math.random()*.5+'s';
     p.style.animationDuration=(.9+Math.random()*.7)+'s';
     p.style.width=(5+Math.random()*7)+'px';
     p.style.height=(5+Math.random()*7)+'px';
-    zone.appendChild(p);
-    setTimeout(()=>p.remove(),2000);
+    zone.appendChild(p);setTimeout(()=>p.remove(),2000);
   }
 }
 
 function setPerson(name){
-  currentPerson=name;
-  localStorage.setItem('mason_person',name);
+  currentPerson=name;localStorage.setItem('mason_person',name);
   applyPersonDefaults();applyDarkMode();updatePtsDisplay();renderAll();renderRewards();
 }
 
@@ -1014,11 +1088,11 @@ async function resetDailyConfirm(){
   const dc=allChores.filter(c=>c.frequency==='daily');
   try{
     await Promise.all(dc.map(c=>{
-      const key=getDailyStatusKey(c.id,todayStr);
+      const key=getDSK(c.id,todayStr);
       if(dailyStatusMap[key]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+todayStr,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    dc.forEach(c=>{const key=getDailyStatusKey(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
+    dc.forEach(c=>{const key=getDSK(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
     buildDayStrip();renderDaily();updateStats();showToast('Daily chores reset');
   }catch(e){showToast('Error resetting');}
 }
@@ -1028,27 +1102,64 @@ async function resetWeekly(){
   const wc=allChores.filter(c=>c.frequency==='weekly');
   try{
     await Promise.all(wc.map(c=>{
-      const key=getDailyStatusKey(c.id,todayStr);
+      const key=getDSK(c.id,todayStr);
       if(dailyStatusMap[key]) return api('daily_status?chore_id=eq.'+c.id+'&status_date=eq.'+todayStr,'PATCH',{done:false});
       return Promise.resolve();
     }));
-    wc.forEach(c=>{const key=getDailyStatusKey(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
+    wc.forEach(c=>{const key=getDSK(c.id,todayStr);if(dailyStatusMap[key]) dailyStatusMap[key].done=false;});
     renderWeekly();updateStats();showToast('Weekly chores reset');
   }catch(e){showToast('Error resetting');}
 }
 
-async function addChore(freq){
-  const nameEl=document.getElementById('add-'+freq+'-name');
-  const assignEl=document.getElementById('add-'+freq+'-assign');
-  const name=nameEl.value.trim();
-  if(!name) return;
+function openSheet(){
+  document.getElementById('sheet-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('sheet-name').focus(),100);
+}
+
+function closeSheet(){
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('sheet-name').value='';
+}
+
+function sheetSelectSeg(groupId,btn){
+  document.querySelectorAll('#'+groupId+' .seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function sheetUpdateFields(){
+  const active=document.querySelector('#sheet-tab-seg .seg-btn.active').textContent.trim();
+  document.getElementById('sheet-daily-fields').style.display=active==='Daily'?'':'none';
+  document.getElementById('sheet-weekly-fields').style.display=active==='Weekly'?'':'none';
+  document.getElementById('sheet-occasional-fields').style.display=active==='Occasional'?'':'none';
+  const bar=document.getElementById('bottom-add-bar');
+  bar.style.display=active==='Daily'||active==='Weekly'||active==='Monthly'||active==='Occasional'?'':'none';
+}
+
+async function submitSheet(){
+  const name=document.getElementById('sheet-name').value.trim();
+  if(!name){showToast('Enter a chore name');return;}
+  const freq=document.querySelector('#sheet-tab-seg .seg-btn.active').textContent.trim().toLowerCase();
+  const assigned=document.querySelector('#sheet-assign-seg .seg-btn.active').textContent.trim();
   const extras={};
-  if(freq==='daily'){extras.sub_section=document.getElementById('add-daily-sec').value;extras.daily_interval=1;}
-  if(freq==='weekly') extras.due_day=document.getElementById('add-weekly-day').value;
-  if(freq==='occasional') extras.sort_order=parseInt(document.getElementById('add-occasional-interval').value)||180;
+  if(freq==='daily'){
+    extras.sub_section=document.querySelector('#sheet-sec-seg .seg-btn.active').textContent.trim();
+    const repText=document.querySelector('#sheet-rep-seg .seg-btn.active').textContent.trim();
+    extras.daily_interval=parseInt(repText)||1;
+  }
+  if(freq==='weekly'){
+    const dayMap={Sun:'Sunday',Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday'};
+    const dayShort=document.querySelector('#sheet-day-seg .seg-btn.active').textContent.trim();
+    extras.due_day=dayMap[dayShort]||dayShort;
+  }
+  if(freq==='occasional'){
+    const intMap={'2 months':60,'3 months':90,'6 months':180,'Yearly':365,'2 years':730};
+    const intText=document.querySelector('#sheet-int-seg .seg-btn.active').textContent.trim();
+    extras.sort_order=intMap[intText]||180;
+  }
   try{
-    const [created]=await api('chores','POST',{name,assigned_to:assignEl.value,frequency:freq,...extras});
-    allChores.push(created);nameEl.value='';
+    const [created]=await api('chores','POST',{name,assigned_to:assigned,frequency:freq,...extras});
+    allChores.push(created);
+    closeSheet();
     if(freq==='daily') renderDaily();
     else if(freq==='weekly') renderWeekly();
     else if(freq==='monthly') renderMonthly();
@@ -1071,10 +1182,7 @@ function openEdit(e,id,freq){
   document.getElementById('m-lastdone-field').style.display=(freq==='monthly'||freq==='occasional')?'':'none';
   document.getElementById('m-interval-field').style.display=freq==='occasional'?'':'none';
   document.getElementById('m-subsection-field').style.display=freq==='daily'?'':'none';
-  if(freq==='daily'){
-    document.getElementById('m-interval-daily').value=chore.daily_interval||1;
-    document.getElementById('m-subsection').value=normalizeSubsection(chore.sub_section);
-  }
+  if(freq==='daily'){document.getElementById('m-interval-daily').value=chore.daily_interval||1;document.getElementById('m-subsection').value=normalizeSubsection(chore.sub_section);}
   if(freq==='weekly'&&chore.due_day) document.getElementById('m-day').value=chore.due_day;
   if((freq==='monthly'||freq==='occasional')&&chore.last_done) document.getElementById('m-lastdone').value=chore.last_done;
   if(freq==='occasional') document.getElementById('m-interval').value=chore.sort_order||180;
@@ -1084,11 +1192,7 @@ function openEdit(e,id,freq){
 async function saveChore(){
   if(!activeChoreId) return;
   const updates={name:document.getElementById('m-name').value.trim(),assigned_to:document.getElementById('m-assign').value};
-  if(activeFreq==='daily'){
-    updates.streak=parseInt(document.getElementById('m-streak').value)||0;
-    updates.sub_section=document.getElementById('m-subsection').value;
-    updates.daily_interval=parseInt(document.getElementById('m-interval-daily').value)||1;
-  }
+  if(activeFreq==='daily'){updates.streak=parseInt(document.getElementById('m-streak').value)||0;updates.sub_section=document.getElementById('m-subsection').value;updates.daily_interval=parseInt(document.getElementById('m-interval-daily').value)||1;}
   if(activeFreq==='weekly') updates.due_day=document.getElementById('m-day').value;
   if(activeFreq==='monthly') updates.last_done=document.getElementById('m-lastdone').value||null;
   if(activeFreq==='occasional'){updates.last_done=document.getElementById('m-lastdone').value||null;updates.sort_order=parseInt(document.getElementById('m-interval').value)||180;}
@@ -1123,6 +1227,7 @@ function showTab(name,btn){
   activeTab=name;
   document.getElementById('day-strip').style.display=name==='daily'?'':'none';
   document.getElementById('viewing-banner').classList.toggle('show',name==='daily'&&selectedDateStr!==todayStr);
+  document.getElementById('bottom-add-bar').style.display=(name==='rewards'||name==='activity')?'none':'';
   if(name==='rewards') renderRewards();
   if(name==='activity') reloadActivity();
 }
@@ -1137,20 +1242,15 @@ async function reloadActivity(){
   }catch(e){}
 }
 
-async function refreshData(){
-  showToast('Refreshing...');await loadAll();showToast('Up to date');
-}
+async function refreshData(){showToast('Refreshing...');await loadAll();showToast('Up to date');}
 
 function setWho(who,btn){
   currentWho=who;
   document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderAll();
+  btn.classList.add('active');renderAll();
 }
 
-function esc(str){
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -1160,6 +1260,7 @@ function showToast(msg){
 
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this) closeModal();});
 document.getElementById('who-modal').addEventListener('click',function(e){if(e.target===this) closeWhoModal();});
+document.getElementById('sheet-overlay').addEventListener('click',function(e){if(e.target===this) closeSheet();});
 
 applyDarkMode();
 setInterval(applyDarkMode,10*60*1000);
