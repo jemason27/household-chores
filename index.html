@@ -514,7 +514,7 @@ let currentPerson=localStorage.getItem('mason_person')||null;
 let jakePoints=0,marysaPoints=0,jakeWeekPts=0,marysaWeekPts=0;
 let allRedemptions=[];
 const todayDate=new Date();
-const todayStr=todayDate.toISOString().split('T')[0];
+const todayStr=todayDate.toLocaleDateString('en-CA');
 let selectedDateStr=todayStr;
 let pendingToggleId=null,pendingToggleFreq=null,pendingToggleDateStr=null,whoModalSelected=null;
 
