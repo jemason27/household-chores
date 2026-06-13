@@ -275,7 +275,7 @@ body.dark .redemption-log-row{border-color:#3a3a3a}
   .edit-btn{opacity:1;width:22px;height:22px}
   .log-row .hide-mobile{display:none}
   .redemption-log-row{grid-template-columns:62px minmax(0,1fr) 60px}
-  .bottom-add-bar{padding:.6rem .75rem}
+  .bottom-add-bar{padding:.6rem .75rem;padding-bottom:calc(.6rem + env(safe-area-inset-bottom))}
 }
 </style>
 </head>
@@ -481,7 +481,6 @@ const SECTIONS=[
   {key:'Midday',icon:'ti-sun-high'},
   {key:'Evening',icon:'ti-moon'}
 ];
-const STREAK_TIERS=[1,4,7,10];
 
 function flameForStreak(streak){
   if(!streak||streak<1) return '';
@@ -518,7 +517,7 @@ const todayStr=todayDate.toLocaleDateString('en-CA');
 let selectedDateStr=todayStr;
 let pendingToggleId=null,pendingToggleFreq=null,pendingToggleDateStr=null,whoModalSelected=null;
 
-function dateToStr(d){return d.toISOString().split('T')[0];}
+function dateToStr(d){return d.toLocaleDateString('en-CA');}
 
 function getWeekDates(){
   const dates=[];
@@ -613,7 +612,37 @@ async function loadAll(){
     renderRewards();
     renderActivity(comps||[],redemptions||[]);
     updateStats();
+    checkRedemptionNotice(redemptions||[]);
   }catch(e){showToast('Error loading data');console.error(e);}
+}
+
+function checkRedemptionNotice(redemptions){
+  if(!currentPerson||!redemptions.length) return;
+  const other=currentPerson==='Jake'?'Marysa':'Jake';
+  const lastSeenKey='mason_last_seen_'+currentPerson;
+  const lastSeen=localStorage.getItem(lastSeenKey)||'1970-01-01T00:00:00Z';
+  const unseen=redemptions.filter(r=>r.person===other&&r.created_at>lastSeen);
+  localStorage.setItem(lastSeenKey,new Date().toISOString());
+  if(!unseen.length) return;
+  const latest=unseen[0];
+  showRedemptionBanner(`${other} redeemed: ${latest.reward_name}${unseen.length>1?' (+'+(unseen.length-1)+' more)':''}`);
+}
+
+function showRedemptionBanner(msg){
+  let banner=document.getElementById('redemption-banner');
+  if(!banner){
+    banner=document.createElement('div');
+    banner.id='redemption-banner';
+    banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:400;background:#E8620A;color:#fff;font-size:13px;font-weight:500;text-align:center;padding:14px 16px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);cursor:pointer';
+    banner.onclick=()=>{
+      banner.style.transform='translateY(-100%)';
+      showTab('rewards',document.querySelectorAll('.tab')[4]);
+    };
+    document.body.appendChild(banner);
+  }
+  banner.textContent='🎉 '+msg+' — tap to view';
+  setTimeout(()=>banner.style.transform='translateY(0)',50);
+  setTimeout(()=>banner.style.transform='translateY(-100%)',6000);
 }
 
 function setAppDate(){
@@ -738,7 +767,7 @@ function toolbarHTML(label,resetFn){
   return `<div class="tab-toolbar"><span class="tab-toolbar-label">${label}</span><button class="reset-btn" onclick="${resetFn}"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button></div>`;
 }
 
-function streakHTML(chore,animate){
+function streakHTML(chore){
   const streak=chore.streak||0;
   if(streak<1) return `<span class="streak-inline">0 days</span>`;
   const flame=flameForStreak(streak);
@@ -767,7 +796,7 @@ function renderDaily(){
         <div class="cb${done?' on':''}"></div>
         <div class="chore-cell">
           <span class="chore-name">${esc(c.name)}</span>
-          <div class="chore-meta-line">${streakHTML(c,false)}${(c.daily_interval||1)>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
+          <div class="chore-meta-line">${streakHTML(c)}${(c.daily_interval||1)>1?`<span class="meta-tag">Every ${c.daily_interval} days</span>`:''}</div>
         </div>
         <span class="pill ${pillClass(c.assigned_to)}">${c.assigned_to}</span>
         <span class="desktop-meta" style="font-size:12px;color:#999">${c.streak||0} days</span>
@@ -999,10 +1028,10 @@ async function doToggle(id,freq,dateStr,completedBy){
       await api('daily_status','POST',{chore_id:id,status_date:dateStr,done:newVal});
     }
     const chore=allChores.find(c=>c.id===id);
-    let newStreak=chore?.streak||0;
+    const prevStreak=chore?.streak||0;
     if(newVal&&chore){
       const updates={};
-      if(freq==='daily'){newStreak=(chore.streak||0)+1;updates.streak=newStreak;}
+      if(freq==='daily') updates.streak=prevStreak+1;
       if(freq==='monthly'||freq==='occasional') updates.last_done=dateStr;
       if(Object.keys(updates).length){await api('chores?id=eq.'+id,'PATCH',updates);Object.assign(chore,updates);}
       const loggedBy=completedBy||currentPerson||chore.assigned_to;
@@ -1019,11 +1048,9 @@ async function doToggle(id,freq,dateStr,completedBy){
       updatePtsDisplay();
       if(activeTab==='rewards') renderRewards();
       if(freq==='daily'){
-        const prevStage=flameStage((chore.streak||1)-1);
-        const newStage=flameStage(newStreak);
-        if(newStage>prevStage){
-          setTimeout(()=>animateFlame(id),100);
-        }
+        const prevStage=flameStage(prevStreak);
+        const newStage=flameStage(chore.streak||0);
+        if(newStage>prevStage) setTimeout(()=>animateFlame(id),80);
       }
     }
     dailyStatusMap[key]={done:newVal,chore_id:id,status_date:dateStr};
@@ -1033,11 +1060,6 @@ async function doToggle(id,freq,dateStr,completedBy){
     else if(freq==='monthly') renderMonthly();
     else renderOccasional();
     updateStats();
-    if(newVal&&freq==='daily'&&chore){
-      const prevStage=flameStage((chore.streak||1)-1);
-      const newStage=flameStage(chore.streak||0);
-      if(newStage>prevStage) setTimeout(()=>animateFlame(id),80);
-    }
   }catch(e){showToast('Error saving');console.error(e);}
 }
 
@@ -1131,8 +1153,6 @@ function sheetUpdateFields(){
   document.getElementById('sheet-daily-fields').style.display=active==='Daily'?'':'none';
   document.getElementById('sheet-weekly-fields').style.display=active==='Weekly'?'':'none';
   document.getElementById('sheet-occasional-fields').style.display=active==='Occasional'?'':'none';
-  const bar=document.getElementById('bottom-add-bar');
-  bar.style.display=active==='Daily'||active==='Weekly'||active==='Monthly'||active==='Occasional'?'':'none';
 }
 
 async function submitSheet(){
