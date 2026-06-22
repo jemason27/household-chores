@@ -796,7 +796,7 @@ function renderWeekly(){
     const dStr=dateToStr(d);
     const weeklyChores=allChores.filter(c=>c.frequency==='weekly');
     const hasData=weeklyChores.some(c=>dailyStatusMap[getDSK(c.id,dStr)]?.done);
-    html+=`<div class="week-day-mini${hasData?' has-data':''}"><div class="week-day-mini-name">${DAY_NAMES[d.getDay()]}</div></div>`;
+    html+=`<div class="week-day-mini${hasData?' has-data':''}"><div class="week-day-mini-name">${DAY_NAMES[d.getDay()]} ${d.getDate()}</div></div>`;
   });
   html+='</div>';
 
