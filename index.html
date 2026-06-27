@@ -939,8 +939,6 @@ function renderMonthly(){
   html+='</div>';
   document.getElementById('tab-monthly').innerHTML=html;
 }
-    html+='<div class="empty">No one-off requests right now</div>';
-  }
   oneOffs.forEach(c=>{
     html+=`<div class="chore-row m-grid" onclick="toggleOneOff('${c.id}')">
       <div class="cb"></div>
