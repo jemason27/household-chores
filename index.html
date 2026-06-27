@@ -1284,10 +1284,12 @@ function openSheet(){
   document.getElementById('sheet-save-btn').textContent='Add chore';
   document.getElementById('sheet-delete-btn').style.display='none';
   document.getElementById('sheet-name').value='';
+  sheetSelectSeg('sheet-kind-seg',document.querySelector('#sheet-kind-seg .seg-btn'));
   sheetSelectSeg('sheet-tab-seg',document.querySelector('#sheet-tab-seg .seg-btn'));
   sheetSelectSeg('sheet-sec-seg',document.querySelector('#sheet-sec-seg .seg-btn'));
   sheetSelectSeg('sheet-rep-seg',document.querySelector('#sheet-rep-seg .seg-btn'));
-  sheetUpdateFields();
+  document.getElementById('sheet-oneoff-pts').value='15';
+  sheetUpdateKind();
   document.getElementById('sheet-overlay').classList.add('open');
   setTimeout(()=>document.getElementById('sheet-name').focus(),100);
 }
