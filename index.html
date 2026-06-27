@@ -939,26 +939,6 @@ function renderMonthly(){
   html+='</div>';
   document.getElementById('tab-monthly').innerHTML=html;
 }
-  oneOffs.forEach(c=>{
-    html+=`<div class="chore-row m-grid" onclick="toggleOneOff('${c.id}')">
-      <div class="cb"></div>
-      <div class="chore-cell">
-        <span class="chore-name">${esc(c.name)}</span>
-      </div>
-      <span class="pts-badge">+${c.points_value||0} pts</span>
-      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','one_off')"><i class="ti ti-edit" style="font-size:13px"></i></button>
-    </div>`;
-  });
-
-  html+='</div>';
-  document.getElementById('tab-asneeded').innerHTML=html;
-}
-
-async function toggleOneOff(id){
-  const chore=allChores.find(c=>c.id===id);
-  if(!chore) return;
-  openWhoModal(id,'one_off',todayStr);
-}
 
 function renderOccasional(){
   const chores=sortChoresByStatus(choresFor('occasional'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
@@ -1129,6 +1109,7 @@ function setFairnessRange(range){
 }
 
 function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasional();renderAsNeeded();}
+
 function updateStats(){
   const daily=allChores.filter(c=>c.frequency==='daily'&&isDueOnDate(c,todayStr));
   const doneDaily=daily.filter(c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done).length;
@@ -1463,6 +1444,7 @@ function sheetUpdateFields(){
   document.getElementById('sheet-weekly-fields').style.display=active==='Weekly'?'':'none';
   document.getElementById('sheet-occasional-fields').style.display=active==='Occasional'?'':'none';
 }
+
 async function submitSheet(){
   const name=document.getElementById('sheet-name').value.trim();
   if(!name){showToast('Enter a chore name');return;}
@@ -1524,17 +1506,6 @@ async function submitSheet(){
     }
   }catch(e){showToast('Error saving chore');console.error(e);}
 }
-      const [created]=await api('chores','POST',{name,frequency:freq,assigned_to:'Both',...extras});
-      allChores.push(created);
-      closeSheet();
-      if(freq==='daily') renderDaily();
-      else if(freq==='weekly') renderWeekly();
-      else if(freq==='monthly') renderMonthly();
-      else renderOccasional();
-      updateStats();showToast('Chore added');
-    }
-  }catch(e){showToast('Error saving chore');console.error(e);}
-}
 
 async function sheetDelete(){
   if(!sheetEditingId||!confirm('Delete this chore?')) return;
@@ -1546,7 +1517,8 @@ async function sheetDelete(){
 }
 
 function showTab(name,btn){
-['daily','weekly','monthly','occasional','asneeded','rewards','activity'].forEach(t=>{    document.getElementById('tab-'+t).style.display=t===name?'':'none';
+  ['daily','weekly','monthly','occasional','asneeded','rewards','activity'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'':'none';
   });
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
