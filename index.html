@@ -798,49 +798,54 @@ function renderDaily(){
   document.getElementById('tab-daily').innerHTML=html;
 }
 
+function dueDayIndex(dueDay){
+  const map={Sunday:0,Monday:1,Tuesday:2,Wednesday:3,Thursday:4,Friday:5,Saturday:6};
+  return map[dueDay]??1;
+}
+
 function renderWeekly(){
-  const chores=sortChoresByStatus(choresFor('weekly'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
+  const chores=choresFor('weekly');
   const weekDates=getWeekDates();
   weeklyDetailDates=weekDates.map(dateToStr);
   let html='<div class="card">';
   html+=toolbarHTML('Reset clears all weekly checkboxes — tap every Sunday','resetWeekly()');
 
-  html+='<div class="week-grid-mini">';
+  html+='<div class="week-head-row">';
+  html+='<span class="week-head-chore">Chore</span>';
   weekDates.forEach(d=>{
-    const dStr=dateToStr(d);
-    const weeklyChores=allChores.filter(c=>c.frequency==='weekly');
-    const hasData=weeklyChores.some(c=>dailyStatusMap[getDSK(c.id,dStr)]?.done);
-    html+=`<div class="week-day-mini${hasData?' has-data':''}"><div class="week-day-mini-name">${DAY_NAMES[d.getDay()]} ${d.getDate()}</div></div>`;
+    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
   });
-  html+='</div>';
+  html+='<span>Pts</span><span></span></div>';
 
-  html+='<div class="col-head w-grid"><span></span><span>Chore</span><span class="desktop-meta">Due day</span><span>Pts</span><span></span></div>';
   if(!chores.length) html+='<div class="empty">No weekly chores yet</div>';
+
   chores.forEach(c=>{
-    const done=dailyStatusMap[getDSK(c.id,todayStr)]?.done||false;
-    html+=`<div class="chore-row w-grid${done?' done':''}" onclick="toggleChore('${c.id}','weekly','${todayStr}')">
-      <div class="cb${done?' on':''}"></div>
-      <div class="chore-cell">
-        <span class="chore-name">${esc(c.name)}</span>
-        <div class="chore-meta-line"><span class="meta-tag">${c.due_day||'—'}</span></div>
-      </div>
-      <span class="desktop-meta" style="font-size:12px;color:#999">${c.due_day||'—'}</span>
-      ${ptsBadge('weekly',done)}
-      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
-    </div>`;
+    const dueIdx=dueDayIndex(c.due_day);
+    html+='<div class="week-full-row">';
+    html+=`<div class="chore-cell"><span class="chore-name">${esc(c.name)}</span></div>`;
+    weekDates.forEach((d,i)=>{
+      const dStr=dateToStr(d);
+      const done=dailyStatusMap[getDSK(c.id,dStr)]?.done||false;
+      const isFuture=dStr>todayStr;
+      const isDueDay=i===dueIdx;
+      const cls=['week-day-cb'];
+      if(done) cls.push('done');
+      if(isDueDay&&!done) cls.push('due-marker');
+      if(isFuture) cls.push('future');
+      const clickAttr=isFuture?'':`onclick="toggleWeeklyDay('${c.id}','${dStr}')"`;
+      html+=`<div class="${cls.join(' ')}" ${clickAttr}></div>`;
+    });
+    html+=ptsBadge('weekly',false).replace('opacity:.35;','');
+    html+=`<button class="edit-btn" style="opacity:1" onclick="openEditSheet(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>`;
+    html+='</div>';
   });
 
   if(chores.length){
-    html+='<div class="redemption-log-title" style="padding-top:12px">Day-by-day this week</div>';
-    chores.forEach(c=>{
-      html+=`<div class="week-detail-row"><span class="chore-name" style="font-size:12px">${esc(c.name)}</span>`;
-      weeklyDetailDates.forEach(dStr=>{
-        const d=dailyStatusMap[getDSK(c.id,dStr)]?.done||false;
-        const clickable=dStr<=todayStr;
-        html+=`<div class="week-cb-mini${d?' done':''}" ${clickable?`onclick="toggleWeeklyDay('${c.id}','${dStr}')"`:''} style="${clickable?'':'opacity:.3;cursor:default'}"></div>`;
-      });
-      html+='</div>';
-    });
+    html+=`<div class="week-legend">
+      <span class="legend-item"><span class="legend-box due"></span> Due day</span>
+      <span class="legend-item"><span class="legend-box done"></span> Completed</span>
+      <span class="legend-item"><span class="legend-box future"></span> Future</span>
+    </div>`;
   }
 
   html+='</div>';
@@ -849,6 +854,52 @@ function renderWeekly(){
 
 async function toggleWeeklyDay(choreId,dStr){
   await toggleChore(choreId,'weekly',dStr);
+}
+
+function renderAsNeeded(){
+  const chores=choresFor('as_needed');
+  const oneOffs=allChores.filter(c=>c.frequency==='one_off');
+  let html='<div class="card">';
+  html+='<div class="col-head m-grid"><span></span><span>Chore</span><span class="desktop-meta">Last done</span><span></span></div>';
+  if(!chores.length) html+='<div class="empty">No as-needed chores yet</div>';
+  chores.forEach(c=>{
+    const ld=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Never';
+    const daysSince=c.last_done?Math.floor((new Date()-new Date(c.last_done))/86400000):null;
+    const sinceLabel=daysSince===null?'Not yet done':daysSince===0?'Done today':daysSince===1?'1 day ago':daysSince+' days ago';
+    html+=`<div class="chore-row m-grid" onclick="toggleChore('${c.id}','as_needed','${todayStr}')">
+      <div class="cb"></div>
+      <div class="chore-cell">
+        <span class="chore-name">${esc(c.name)}</span>
+        <div class="chore-meta-line"><span class="meta-tag">${sinceLabel}</span></div>
+      </div>
+      <span class="desktop-meta" style="font-size:12px;color:#999">${ld}</span>
+      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','as_needed')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    </div>`;
+  });
+
+  html+='<div class="redemption-log-title" style="padding-top:12px">One-Offs</div>';
+  if(!oneOffs.length){
+    html+='<div class="empty">No one-off requests right now</div>';
+  }
+  oneOffs.forEach(c=>{
+    html+=`<div class="chore-row m-grid" onclick="toggleOneOff('${c.id}')">
+      <div class="cb"></div>
+      <div class="chore-cell">
+        <span class="chore-name">${esc(c.name)}</span>
+      </div>
+      <span class="pts-badge">+${c.points_value||0} pts</span>
+      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','one_off')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    </div>`;
+  });
+
+  html+='</div>';
+  document.getElementById('tab-asneeded').innerHTML=html;
+}
+
+async function toggleOneOff(id){
+  const chore=allChores.find(c=>c.id===id);
+  if(!chore) return;
+  openWhoModal(id,'one_off',todayStr);
 }
 
 function renderMonthly(){
