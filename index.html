@@ -1373,7 +1373,27 @@ function sheetUpdateFields(){
 async function submitSheet(){
   const name=document.getElementById('sheet-name').value.trim();
   if(!name){showToast('Enter a chore name');return;}
-  const freq=document.querySelector('#sheet-tab-seg .seg-btn.active').textContent.trim().toLowerCase();
+  const kind=document.querySelector('#sheet-kind-seg .seg-btn.active').textContent.trim();
+
+  if(kind==='One-Off'){
+    const pts=parseInt(document.getElementById('sheet-oneoff-pts').value)||15;
+    try{
+      if(sheetEditingId){
+        await api('chores?id=eq.'+sheetEditingId,'PATCH',{name,frequency:'one_off',points_value:pts});
+        const idx=allChores.findIndex(c=>c.id===sheetEditingId);
+        if(idx>=0) allChores[idx]={...allChores[idx],name,frequency:'one_off',points_value:pts};
+        closeSheet();renderAll();showToast('Saved');
+      }else{
+        const [created]=await api('chores','POST',{name,frequency:'one_off',points_value:pts,assigned_to:'Both'});
+        allChores.push(created);
+        closeSheet();renderAsNeeded();showToast('One-off request added');
+      }
+    }catch(e){showToast('Error saving chore');console.error(e);}
+    return;
+  }
+
+  const tabLabel=document.querySelector('#sheet-tab-seg .seg-btn.active').textContent.trim();
+  const freq=tabLabel==='As Needed'?'as_needed':tabLabel.toLowerCase();
   const extras={};
   if(freq==='daily'){
     extras.sub_section=document.querySelector('#sheet-sec-seg .seg-btn.active').textContent.trim();
@@ -1399,6 +1419,18 @@ async function submitSheet(){
       renderAll();
       showToast('Saved');
     }else{
+      const [created]=await api('chores','POST',{name,frequency:freq,assigned_to:'Both',...extras});
+      allChores.push(created);
+      closeSheet();
+      if(freq==='daily') renderDaily();
+      else if(freq==='weekly') renderWeekly();
+      else if(freq==='monthly') renderMonthly();
+      else if(freq==='as_needed') renderAsNeeded();
+      else renderOccasional();
+      updateStats();showToast('Chore added');
+    }
+  }catch(e){showToast('Error saving chore');console.error(e);}
+}
       const [created]=await api('chores','POST',{name,frequency:freq,assigned_to:'Both',...extras});
       allChores.push(created);
       closeSheet();
