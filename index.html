@@ -1339,13 +1339,25 @@ function sheetSelectSeg(groupId,btn){
   btn.classList.add('active');
 }
 
+function sheetUpdateKind(){
+  const kind=document.querySelector('#sheet-kind-seg .seg-btn.active').textContent.trim();
+  const isOneOff=kind==='One-Off';
+  document.getElementById('sheet-recurring-tab-field').style.display=isOneOff?'none':'';
+  document.getElementById('sheet-oneoff-field').style.display=isOneOff?'':'none';
+  if(!isOneOff) sheetUpdateFields();
+  else{
+    document.getElementById('sheet-daily-fields').style.display='none';
+    document.getElementById('sheet-weekly-fields').style.display='none';
+    document.getElementById('sheet-occasional-fields').style.display='none';
+  }
+}
+
 function sheetUpdateFields(){
   const active=document.querySelector('#sheet-tab-seg .seg-btn.active').textContent.trim();
   document.getElementById('sheet-daily-fields').style.display=active==='Daily'?'':'none';
   document.getElementById('sheet-weekly-fields').style.display=active==='Weekly'?'':'none';
   document.getElementById('sheet-occasional-fields').style.display=active==='Occasional'?'':'none';
 }
-
 async function submitSheet(){
   const name=document.getElementById('sheet-name').value.trim();
   if(!name){showToast('Enter a chore name');return;}
