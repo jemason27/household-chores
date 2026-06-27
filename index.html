@@ -930,6 +930,57 @@ function renderMonthly(){
   html+='</div>';
   document.getElementById('tab-monthly').innerHTML=html;
 }
+    html+='<div class="empty">No one-off requests right now</div>';
+  }
+  oneOffs.forEach(c=>{
+    html+=`<div class="chore-row m-grid" onclick="toggleOneOff('${c.id}')">
+      <div class="cb"></div>
+      <div class="chore-cell">
+        <span class="chore-name">${esc(c.name)}</span>
+      </div>
+      <span class="pts-badge">+${c.points_value||0} pts</span>
+      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','one_off')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    </div>`;
+  });
+
+  html+='</div>';
+  document.getElementById('tab-asneeded').innerHTML=html;
+}
+
+async function toggleOneOff(id){
+  const chore=allChores.find(c=>c.id===id);
+  if(!chore) return;
+  openWhoModal(id,'one_off',todayStr);
+}
+
+function renderMonthly(){
+  const chores=sortChoresByStatus(choresFor('monthly'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
+  let html='<div class="card">';
+  html+='<div class="col-head m-grid"><span></span><span>Chore</span><span class="desktop-meta">Last done</span><span></span></div>';
+  if(!chores.length) html+='<div class="empty">No monthly chores yet</div>';
+  chores.forEach(c=>{
+    const done=dailyStatusMap[getDSK(c.id,todayStr)]?.done||false;
+    let sl,sc;
+    if(done){sl='Done';sc='ps';}
+    else if(!c.last_done){sl='Not set';sc='pp';}
+    else{
+      const days=Math.floor((new Date()-new Date(c.last_done))/86400000);
+      if(days>35){sl='Overdue';sc='po';}else if(days>25){sl='Due soon';sc='pp';}else{sl='On track';sc='ps';}
+    }
+    const ld=c.last_done?new Date(c.last_done+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
+    html+=`<div class="chore-row m-grid${done?' done':''}" onclick="toggleChore('${c.id}','monthly','${todayStr}')">
+      <div class="cb${done?' on':''}"></div>
+      <div class="chore-cell">
+        <span class="chore-name">${esc(c.name)}</span>
+        <div class="chore-meta-line"><span class="meta-tag">Last: ${ld}</span><span class="pill ${sc}" style="font-size:10px">${sl}</span></div>
+      </div>
+      <span class="desktop-meta" style="font-size:12px;color:#999">${ld}</span>
+      <button class="edit-btn" onclick="openEditSheet(event,'${c.id}','monthly')"><i class="ti ti-edit" style="font-size:13px"></i></button>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('tab-monthly').innerHTML=html;
+}
 
 function renderOccasional(){
   const chores=sortChoresByStatus(choresFor('occasional'),c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done||false);
