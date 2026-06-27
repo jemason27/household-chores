@@ -362,13 +362,25 @@ body.dark .week-detail-row{border-color:#3a3a3a}
       <input class="sheet-input" id="sheet-name" placeholder="e.g. Clean dog bowls" onkeydown="if(event.key==='Enter')submitSheet()">
     </div>
     <div class="sheet-field">
+      <div class="sheet-label">Type</div>
+      <div class="seg-group" id="sheet-kind-seg">
+        <div class="seg-btn active" onclick="sheetSelectSeg('sheet-kind-seg',this);sheetUpdateKind()">Recurring</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-kind-seg',this);sheetUpdateKind()">One-Off</div>
+      </div>
+    </div>
+    <div id="sheet-recurring-tab-field" class="sheet-field">
       <div class="sheet-label">Tab</div>
       <div class="seg-group" id="sheet-tab-seg">
         <div class="seg-btn active" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Daily</div>
         <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Weekly</div>
         <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Monthly</div>
         <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">Occasional</div>
+        <div class="seg-btn" onclick="sheetSelectSeg('sheet-tab-seg',this);sheetUpdateFields()">As Needed</div>
       </div>
+    </div>
+    <div id="sheet-oneoff-field" class="sheet-field" style="display:none">
+      <div class="sheet-label">Points value</div>
+      <input class="sheet-input" id="sheet-oneoff-pts" type="number" min="1" placeholder="e.g. 15" value="15">
     </div>
     <div id="sheet-daily-fields">
       <div class="sheet-field">
