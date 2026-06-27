@@ -1105,31 +1105,34 @@ async function doToggle(id,freq,dateStr,completedBy){
   const prevLastDone=chore?.last_done||null;
   let pointsAwarded=[];
   let completionId=null;
+  const isOneOff=freq==='one_off';
 
   try{
-    if(dailyStatusMap[key]){
-      await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+dateStr,'PATCH',{done:newVal});
-    }else{
-      await api('daily_status','POST',{chore_id:id,status_date:dateStr,done:newVal});
+    if(!isOneOff){
+      if(dailyStatusMap[key]){
+        await api('daily_status?chore_id=eq.'+id+'&status_date=eq.'+dateStr,'PATCH',{done:newVal});
+      }else{
+        await api('daily_status','POST',{chore_id:id,status_date:dateStr,done:newVal});
+      }
     }
-    if(newVal&&chore){
+    if((newVal||isOneOff)&&chore){
       const updates={};
       if(freq==='daily') updates.streak=prevStreak+1;
-      if(freq==='monthly'||freq==='occasional') updates.last_done=dateStr;
+      if(freq==='monthly'||freq==='occasional'||freq==='as_needed') updates.last_done=dateStr;
       if(Object.keys(updates).length){await api('chores?id=eq.'+id,'PATCH',updates);Object.assign(chore,updates);}
       const loggedBy=completedBy||currentPerson||'Both';
       const [createdComp]=await api('completions','POST',{chore_id:id,chore_name:chore.name,assigned_to:loggedBy,frequency:freq,completed_by:loggedBy});
       completionId=createdComp?.id;
       allCompletions.unshift(createdComp);
+      const ptsForThis=isOneOff?(chore.points_value||15):(FREQ_PTS[freq]||1);
       const peopleToCredit=loggedBy==='Both'?['Jake','Marysa']:[loggedBy];
       for(const person of peopleToCredit){
         if(person==='Jake'||person==='Marysa'){
-          const pts=FREQ_PTS[freq]||1;
-          const [createdPt]=await api('points','POST',{person,amount:pts,chore_name:chore.name,frequency:freq,reason:'chore_complete'});
+          const [createdPt]=await api('points','POST',{person,amount:ptsForThis,chore_name:chore.name,frequency:freq,reason:'chore_complete'});
           pointsAwarded.push(createdPt);
           allPoints.unshift(createdPt);
-          if(person==='Jake'){jakePoints+=pts;jakeWeekPts+=pts;}
-          else{marysaPoints+=pts;marysaWeekPts+=pts;}
+          if(person==='Jake'){jakePoints+=ptsForThis;jakeWeekPts+=ptsForThis;}
+          else{marysaPoints+=ptsForThis;marysaWeekPts+=ptsForThis;}
         }
       }
       updatePtsDisplay();
@@ -1139,6 +1142,16 @@ async function doToggle(id,freq,dateStr,completedBy){
         const newStage=flameStage(chore.streak||0);
         if(newStage>prevStage) setTimeout(()=>animateFlame(id),80);
       }
+
+      if(isOneOff){
+        await api('chores?id=eq.'+id,'DELETE');
+        allChores=allChores.filter(c=>c.id!==id);
+        lastAction=null;
+        renderAsNeeded();
+        showToast(`Completed: ${chore.name}`);
+        return;
+      }
+
       lastAction={
         type:'toggle',choreId:id,freq,dateStr,
         prevStreak,prevLastDone,completionId,pointsAwarded,
@@ -1153,6 +1166,7 @@ async function doToggle(id,freq,dateStr,completedBy){
     if(freq==='daily') renderDaily();
     else if(freq==='weekly') renderWeekly();
     else if(freq==='monthly') renderMonthly();
+    else if(freq==='as_needed') renderAsNeeded();
     else renderOccasional();
     updateStats();
   }catch(e){showToast('Error saving');console.error(e);}
