@@ -1304,7 +1304,17 @@ function openEditSheet(e,id,freq){
   document.getElementById('sheet-delete-btn').style.display='block';
   document.getElementById('sheet-name').value=chore.name;
 
-  const tabLabel=freq.charAt(0).toUpperCase()+freq.slice(1);
+  const isOneOff=freq==='one_off';
+  sheetSelectSeg('sheet-kind-seg',Array.from(document.querySelectorAll('#sheet-kind-seg .seg-btn')).find(b=>b.textContent.trim()===(isOneOff?'One-Off':'Recurring')));
+  sheetUpdateKind();
+
+  if(isOneOff){
+    document.getElementById('sheet-oneoff-pts').value=chore.points_value||15;
+    document.getElementById('sheet-overlay').classList.add('open');
+    return;
+  }
+
+  const tabLabel=freq==='as_needed'?'As Needed':freq.charAt(0).toUpperCase()+freq.slice(1);
   document.querySelectorAll('#sheet-tab-seg .seg-btn').forEach(b=>{
     b.classList.toggle('active',b.textContent.trim()===tabLabel);
   });
