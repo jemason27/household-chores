@@ -1159,8 +1159,7 @@ function setFairnessRange(range){
   renderActivity(allCompletions,allRedemptions);
 }
 
-function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasional();}
-
+function renderAll(){renderDaily();renderWeekly();renderMonthly();renderOccasional();renderAsNeeded();}
 function updateStats(){
   const daily=allChores.filter(c=>c.frequency==='daily'&&isDueOnDate(c,todayStr));
   const doneDaily=daily.filter(c=>dailyStatusMap[getDSK(c.id,todayStr)]?.done).length;
@@ -1578,8 +1577,7 @@ async function sheetDelete(){
 }
 
 function showTab(name,btn){
-  ['daily','weekly','monthly','occasional','rewards','activity'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t===name?'':'none';
+['daily','weekly','monthly','occasional','asneeded','rewards','activity'].forEach(t=>{    document.getElementById('tab-'+t).style.display=t===name?'':'none';
   });
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -1587,6 +1585,7 @@ function showTab(name,btn){
   document.getElementById('day-strip').style.display=name==='daily'?'':'none';
   document.getElementById('viewing-banner').classList.toggle('show',name==='daily'&&selectedDateStr!==todayStr);
   document.getElementById('bottom-add-bar').style.display=(name==='rewards'||name==='activity')?'none':'';
+  if(name==='asneeded') renderAsNeeded();
   if(name==='rewards') renderRewards();
   if(name==='activity') reloadActivity();
 }
