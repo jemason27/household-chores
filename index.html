@@ -837,6 +837,7 @@ function renderWeekly(){
     const dueIdx=dueDayIndex(c.due_day);
     html+='<div class="week-full-row">';
     html+=`<div class="chore-cell"><span class="chore-name">${esc(c.name)}</span></div>`;
+    html+='<div class="week-days-row">';
     weekDates.forEach((d,i)=>{
       const dStr=dateToStr(d);
       const done=dailyStatusMap[getDSK(c.id,dStr)]?.done||false;
@@ -849,8 +850,11 @@ function renderWeekly(){
       const clickAttr=isFuture?'':`onclick="toggleWeeklyDay('${c.id}','${dStr}')"`;
       html+=`<div class="${cls.join(' ')}" ${clickAttr}></div>`;
     });
+    html+='</div>';
+    html+='<div class="week-meta-row">';
     html+=ptsBadge('weekly',false).replace('opacity:.35;','');
     html+=`<button class="edit-btn" style="opacity:1" onclick="openEditSheet(event,'${c.id}','weekly')"><i class="ti ti-edit" style="font-size:13px"></i></button>`;
+    html+='</div>';
     html+='</div>';
   });
 
