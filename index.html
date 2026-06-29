@@ -824,12 +824,18 @@ function renderWeekly(){
   const chores=choresFor('weekly');
   const weekDates=getWeekDates();
   weeklyDetailDates=weekDates.map(dateToStr);
-  let html='<div class="card">';
-
   html+='<div class="week-head-row">';
   html+='<span class="week-head-chore">Chore</span>';
   weekDates.forEach(d=>{
     html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
+  });
+  html+='<span>Pts</span><span></span></div>';
+
+  html+='<div class="week-sticky-header">';
+  weekDates.forEach(d=>{
+    html+=`<span>${DAY_NAMES[d.getDay()]}<br>${d.getDate()}</span>`;
+  });
+  html+='</div>';
   });
   html+='<span>Pts</span><span></span></div>';
 
