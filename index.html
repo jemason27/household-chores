@@ -274,6 +274,7 @@ body.dark .week-day-cb{background:#2a2a2a;border-color:#555}
 .week-day-cb.done::after{content:'';position:absolute;top:6px;left:5px;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
 .week-day-cb.due-marker{border-color:#E8620A;border-width:2px}
 .week-day-cb.future{opacity:.3;cursor:default}
+.week-sticky-header{display:none}
 .week-legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 14px;font-size:10px;color:#888;align-items:center;border-top:1px solid #f0f0f0;transition:border-color .5s,color .5s}
 body.dark .week-legend{border-color:#3a3a3a;color:#999}
 .legend-item{display:flex;align-items:center;gap:5px}
@@ -312,8 +313,9 @@ body.dark .legend-box{border-color:#555}
   .week-full-row .chore-name{font-size:14px;white-space:normal}
   .week-days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
   .week-day-cb{width:100%;height:28px;margin:0}
-  .week-meta-row{display:flex;align-items:center;justify-content:space-between}
-}
+.week-meta-row{display:flex;align-items:center;justify-content:space-between}
+  .week-sticky-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;position:sticky;top:0;z-index:5;background:#fff;padding:8px 12px;border-bottom:1px solid #eee;font-size:9px;font-weight:600;color:#999;text-transform:uppercase;text-align:center}
+  body.dark .week-sticky-header{background:#242424;border-color:#3a3a3a;color:#666}}
 </style>
 </head>
 <body>
