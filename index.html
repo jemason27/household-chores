@@ -822,7 +822,6 @@ function renderWeekly(){
   const weekDates=getWeekDates();
   weeklyDetailDates=weekDates.map(dateToStr);
   let html='<div class="card">';
-  html+=toolbarHTML('Reset clears all weekly checkboxes — tap every Sunday','resetWeekly()');
 
   html+='<div class="week-head-row">';
   html+='<span class="week-head-chore">Chore</span>';
