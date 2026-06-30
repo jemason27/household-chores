@@ -1383,7 +1383,13 @@ function openSheet(){
   document.getElementById('sheet-save-btn').textContent='Add chore';
   document.getElementById('sheet-delete-btn').style.display='none';
   document.getElementById('sheet-name').value='';
-  sheetSelectFreq(document.querySelector('#sheet-freq-seg .seg-btn'),'daily');
+  sheetSelectedFreq=null;
+  document.querySelectorAll('#sheet-freq-seg .seg-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sheet-daily-fields').style.display='none';
+  document.getElementById('sheet-weekly-fields').style.display='none';
+  document.getElementById('sheet-occasional-fields').style.display='none';
+  document.getElementById('sheet-oneoff-field').style.display='none';
+  document.getElementById('sheet-variable-pts-field').style.display='none';
   sheetSelectSeg('sheet-sec-seg',document.querySelector('#sheet-sec-seg .seg-btn'));
   document.querySelectorAll('#sheet-rep-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('#sheet-rep-seg .seg-btn').forEach(b=>b.classList.remove('disabled'));
