@@ -811,7 +811,6 @@ function renderDaily(){
   const readonly=isFutureSelected;
   let chores=choresFor('daily').filter(c=>isDueOnDate(c,selectedDateStr));
   let html='<div class="card">';
-  if(selectedDateStr===todayStr) html+=toolbarHTML('Tap house icon to refresh','resetDailyConfirm()');
   html+='<div class="col-head d-grid"><span></span><span>Chore</span><span class="desktop-meta">Streak</span><span>Pts</span><span></span></div>';
   SECTIONS.forEach(({key,icon})=>{
     let sc=chores.filter(c=>normalizeSubsection(c.sub_section)===key);
