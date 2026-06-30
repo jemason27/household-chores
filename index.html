@@ -1504,6 +1504,7 @@ async function submitSheet(){
   const name=document.getElementById('sheet-name').value.trim();
   if(!name){showToast('Enter a chore name');return;}
   const freq=sheetSelectedFreq;
+  if(!freq){showToast('Select how often first');return;}
 
   if(freq==='one_off'){
     const pts=parseInt(document.getElementById('sheet-oneoff-pts').value)||15;
