@@ -1400,7 +1400,7 @@ function openSheet(){
   document.querySelectorAll('#sheet-rep-seg .seg-btn').forEach(b=>b.classList.remove('disabled'));
   document.querySelectorAll('#sheet-weekday-seg .seg-btn').forEach(b=>{b.classList.remove('active');b.classList.remove('disabled');});
   document.querySelectorAll('#sheet-variable-pts-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
-  document.getElementById('sheet-oneoff-pts').value='15';
+  document.querySelectorAll('#sheet-oneoff-pts-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
   document.getElementById('sheet-overlay').classList.add('open');
   setTimeout(()=>document.getElementById('sheet-name').focus(),100);
 }
