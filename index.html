@@ -1422,7 +1422,7 @@ function openEditSheet(e,id,freq){
   if(freqBtn) sheetSelectFreq(freqBtn,freq);
 
   if(freq==='one_off'){
-    document.getElementById('sheet-oneoff-pts').value=chore.points_value||15;
+document.querySelectorAll('#sheet-oneoff-pts-seg .seg-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===String(chore.points_value||3)));
   }
   if(freq==='occasional'||freq==='as_needed'){
     const pts=chore.points_value||(freq==='occasional'?10:3);
