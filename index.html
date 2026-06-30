@@ -852,7 +852,7 @@ function renderWeekly(){
 
   html+='<div class="week-sticky-days">';
   weekDates.forEach(d=>{
-    html+=`<span>${DAY_NAMES[d.getDay()]}</span>`;
+    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
   });
   html+='</div>';
 
