@@ -31,6 +31,7 @@ body.dark .who-toggle{background:#2a2a2a;border-color:#444}
 .who-btn{padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;border:none;color:#666;transition:all .15s}
 body.dark .who-btn{color:#aaa}
 .who-btn.active{background:#E8620A;color:#fff}
+body.dark .who-btn.active{background:#E8620A;color:#fff}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 .stat{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #eee;transition:background .5s,border-color .5s}
 body.dark .stat{background:#2a2a2a;border-color:#3a3a3a}
@@ -48,10 +49,12 @@ body.dark .stat-pts .stat-label{color:#FAC775}
 .tab{flex:1;padding:6px 2px;border-radius:8px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#666;transition:all .15s;text-align:center;white-space:nowrap}
 body.dark .tab{background:#2a2a2a;border-color:#444;color:#aaa}
 .tab.active{background:#E8620A;color:#fff;border-color:#E8620A}
+body.dark .tab.active{background:#E8620A;color:#fff;border-color:#E8620A}
 .day-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:.75rem}
 .day-btn{padding:6px 2px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;text-align:center;transition:all .15s}
 body.dark .day-btn{background:#2a2a2a;border-color:#444}
 .day-btn.active{background:#E8620A;color:#fff;border-color:#E8620A}
+body.dark .day-btn.active{background:#E8620A;color:#fff;border-color:#E8620A}
 .day-btn.is-today{border-color:#E8620A}
 .day-name{font-size:9px;font-weight:500;color:#999;text-transform:uppercase;letter-spacing:.04em}
 .day-btn.active .day-name{color:#fff}
@@ -189,6 +192,7 @@ body.dark .sheet-input{background:#333;border-color:#555;color:#e0e0e0}
 .seg-btn{padding:6px 12px;border-radius:8px;border:1px solid #ddd;background:#f5f5f5;font-size:12px;font-weight:500;color:#666;cursor:pointer;transition:all .15s}
 body.dark .seg-btn{background:#333;border-color:#555;color:#aaa}
 .seg-btn.active{background:#E8620A;color:#fff;border-color:#E8620A}
+body.dark .seg-btn.active{background:#E8620A;color:#fff;border-color:#E8620A}
 .seg-btn.disabled{opacity:.35;pointer-events:none}
 .sheet-save{width:100%;padding:13px;border-radius:10px;border:none;background:#E8620A;color:#fff;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px}
 .sheet-cancel{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;background:transparent;font-size:13px;color:#888;cursor:pointer;margin-top:8px;transition:border-color .5s,color .5s}
@@ -397,7 +401,7 @@ body.dark .legend-box{border-color:#555}
         <div class="seg-btn" onclick="sheetSelectSeg('sheet-variable-pts-seg',this)">10</div>
       </div>
     </div>
-    <div id="sheet-daily-fields">
+    <div id="sheet-daily-fields" style="display:none">
       <div class="sheet-field">
         <div class="sheet-label">Section</div>
         <div class="seg-group" id="sheet-sec-seg">
