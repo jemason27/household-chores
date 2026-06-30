@@ -825,6 +825,13 @@ function renderWeekly(){
   const chores=choresFor('weekly');
   const weekDates=getWeekDates();
   let html='<div class="card">';
+
+  html+='<div class="week-sticky-days">';
+  weekDates.forEach(d=>{
+    html+=`<span>${DAY_NAMES[d.getDay()]}</span>`;
+  });
+  html+='</div>';
+
   if(!chores.length) html+='<div class="empty">No weekly chores yet</div>';
 
   chores.forEach(c=>{
