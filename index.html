@@ -1512,7 +1512,8 @@ async function submitSheet(){
   if(!freq){showToast('Select how often first');return;}
 
   if(freq==='one_off'){
-    const pts=parseInt(document.getElementById('sheet-oneoff-pts').value)||15;
+const ptsBtn=document.querySelector('#sheet-oneoff-pts-seg .seg-btn.active');
+const pts=ptsBtn?parseInt(ptsBtn.textContent.trim()):3;
     try{
       if(sheetEditingId){
         await api('chores?id=eq.'+sheetEditingId,'PATCH',{name,frequency:'one_off',points_value:pts});
