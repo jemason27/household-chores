@@ -853,11 +853,18 @@ function dueDayIndex(dueDay){
 
 function renderWeekly(){
   const chores=choresFor('weekly');
-  const weekDates=getWeekDates();
-  let html='<div class="card">';
-
-  html+='<div class="week-sticky-days">';
+ html+='<div class="week-sticky-days">';
+  html+='<div class="week-sticky-days-row">';
   weekDates.forEach(d=>{
+    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
+  });
+  html+='</div>';
+  html+=`<div class="week-sticky-legend">
+    <span class="legend-item"><span class="legend-box due"></span> Due day</span>
+    <span class="legend-item"><span class="legend-box done"></span> Completed</span>
+    <span class="legend-item"><span class="legend-box future"></span> Future</span>
+  </div>`;
+  html+='</div>';
     html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
   });
   html+='</div>';
