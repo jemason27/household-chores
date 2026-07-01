@@ -897,13 +897,7 @@ function renderWeekly(){
     html+='</div>';
   });
 
-  if(chores.length){
-    html+=`<div class="week-legend">
-      <span class="legend-item"><span class="legend-box due"></span> Due day</span>
-      <span class="legend-item"><span class="legend-box done"></span> Completed</span>
-      <span class="legend-item"><span class="legend-box future"></span> Future</span>
-    </div>`;
-  }
+ 
 
   html+='</div>';
   document.getElementById('tab-weekly').innerHTML=html;
