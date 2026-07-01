@@ -278,10 +278,13 @@ body.dark .week-day-label{color:#666}
 .week-sticky-days{display:none}
 #tab-weekly .card{overflow:visible}
 @media(max-width:600px){
-  .week-sticky-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;position:sticky;top:0;z-index:5;background:#fff;padding:10px 12px;border-bottom:1px solid #eee}
+.week-sticky-days{display:flex;flex-direction:column;position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #eee}
   body.dark .week-sticky-days{background:#1a1a1a;border-color:#3a3a3a}
+  .week-sticky-days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:10px 12px 6px}
   .week-sticky-days span{font-size:9px;font-weight:600;color:#999;text-transform:uppercase;text-align:center}
   body.dark .week-sticky-days span{color:#666}
+  .week-sticky-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 12px 8px;font-size:10px;color:#888;align-items:center}
+  body.dark .week-sticky-legend{color:#999}
 }
 .week-day-cb{width:100%;aspect-ratio:1;max-width:38px;border-radius:8px;border:1.5px solid #ddd;cursor:pointer;background:#fff;position:relative;transition:all .15s}
 body.dark .week-day-cb{background:#2a2a2a;border-color:#555}
