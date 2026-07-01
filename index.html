@@ -278,13 +278,10 @@ body.dark .week-day-label{color:#666}
 .week-sticky-days{display:none}
 #tab-weekly .card{overflow:visible}
 @media(max-width:600px){
-.week-sticky-days{display:flex;flex-direction:column;position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #eee}
+  .week-sticky-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;position:sticky;top:0;z-index:5;background:#fff;padding:10px 12px;border-bottom:1px solid #eee}
   body.dark .week-sticky-days{background:#1a1a1a;border-color:#3a3a3a}
-  .week-sticky-days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:10px 12px 6px}
   .week-sticky-days span{font-size:9px;font-weight:600;color:#999;text-transform:uppercase;text-align:center}
   body.dark .week-sticky-days span{color:#666}
-  .week-sticky-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 12px 8px;font-size:10px;color:#888;align-items:center}
-  body.dark .week-sticky-legend{color:#999}
 }
 .week-day-cb{width:100%;aspect-ratio:1;max-width:38px;border-radius:8px;border:1.5px solid #ddd;cursor:pointer;background:#fff;position:relative;transition:all .15s}
 body.dark .week-day-cb{background:#2a2a2a;border-color:#555}
@@ -292,7 +289,8 @@ body.dark .week-day-cb{background:#2a2a2a;border-color:#555}
 .week-day-cb.done::after{content:'';position:absolute;top:38%;left:24%;width:38%;height:20%;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-30%)}
 .week-day-cb.due-marker{border-color:#E8620A;border-width:2px}
 .week-day-cb.future{opacity:.3;cursor:default}
-.week-legend{display:none}body.dark .week-legend{border-color:#3a3a3a;color:#999}
+.week-legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 14px;font-size:10px;color:#888;align-items:center;border-top:1px solid #f0f0f0;transition:border-color .5s,color .5s}
+body.dark .week-legend{border-color:#3a3a3a;color:#999}
 .legend-item{display:flex;align-items:center;gap:5px}
 .legend-box{width:11px;height:11px;border-radius:3px;border:1.5px solid #ddd;display:inline-block}
 body.dark .legend-box{border-color:#555}
@@ -400,12 +398,7 @@ body.dark .legend-box{border-color:#555}
     </div>
     <div id="sheet-oneoff-field" class="sheet-field" style="display:none">
       <div class="sheet-label">Points value</div>
-<div class="seg-group" id="sheet-oneoff-pts-seg">
-        <div class="seg-btn" onclick="sheetSelectSeg('sheet-oneoff-pts-seg',this)">1</div>
-        <div class="seg-btn active" onclick="sheetSelectSeg('sheet-oneoff-pts-seg',this)">3</div>
-        <div class="seg-btn" onclick="sheetSelectSeg('sheet-oneoff-pts-seg',this)">5</div>
-        <div class="seg-btn" onclick="sheetSelectSeg('sheet-oneoff-pts-seg',this)">10</div>
-      </div>
+      <input class="sheet-input" id="sheet-oneoff-pts" type="number" min="1" placeholder="e.g. 15" value="15">
     </div>
     <div id="sheet-variable-pts-field" class="sheet-field" style="display:none">
       <div class="sheet-label">Points value</div>
@@ -818,6 +811,7 @@ function renderDaily(){
   const readonly=isFutureSelected;
   let chores=choresFor('daily').filter(c=>isDueOnDate(c,selectedDateStr));
   let html='<div class="card">';
+  if(selectedDateStr===todayStr) html+=toolbarHTML('Tap house icon to refresh','resetDailyConfirm()');
   html+='<div class="col-head d-grid"><span></span><span>Chore</span><span class="desktop-meta">Streak</span><span>Pts</span><span></span></div>';
   SECTIONS.forEach(({key,icon})=>{
     let sc=chores.filter(c=>normalizeSubsection(c.sub_section)===key);
@@ -853,19 +847,12 @@ function dueDayIndex(dueDay){
 
 function renderWeekly(){
   const chores=choresFor('weekly');
- html+='<div class="week-sticky-days">';
-  html+='<div class="week-sticky-days-row">';
+  const weekDates=getWeekDates();
+  let html='<div class="card">';
+
+  html+='<div class="week-sticky-days">';
   weekDates.forEach(d=>{
-    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
-  });
-  html+='</div>';
-  html+=`<div class="week-sticky-legend">
-    <span class="legend-item"><span class="legend-box due"></span> Due day</span>
-    <span class="legend-item"><span class="legend-box done"></span> Completed</span>
-    <span class="legend-item"><span class="legend-box future"></span> Future</span>
-  </div>`;
-  html+='</div>';
-    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
+    html+=`<span>${DAY_NAMES[d.getDay()]}</span>`;
   });
   html+='</div>';
 
@@ -897,7 +884,13 @@ function renderWeekly(){
     html+='</div>';
   });
 
- 
+  if(chores.length){
+    html+=`<div class="week-legend">
+      <span class="legend-item"><span class="legend-box due"></span> Due day</span>
+      <span class="legend-item"><span class="legend-box done"></span> Completed</span>
+      <span class="legend-item"><span class="legend-box future"></span> Future</span>
+    </div>`;
+  }
 
   html+='</div>';
   document.getElementById('tab-weekly').innerHTML=html;
@@ -1391,19 +1384,13 @@ function openSheet(){
   document.getElementById('sheet-save-btn').textContent='Add chore';
   document.getElementById('sheet-delete-btn').style.display='none';
   document.getElementById('sheet-name').value='';
-  sheetSelectedFreq=null;
-  document.querySelectorAll('#sheet-freq-seg .seg-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sheet-daily-fields').style.display='none';
-  document.getElementById('sheet-weekly-fields').style.display='none';
-  document.getElementById('sheet-occasional-fields').style.display='none';
-  document.getElementById('sheet-oneoff-field').style.display='none';
-  document.getElementById('sheet-variable-pts-field').style.display='none';
+  sheetSelectFreq(document.querySelector('#sheet-freq-seg .seg-btn'),'daily');
   sheetSelectSeg('sheet-sec-seg',document.querySelector('#sheet-sec-seg .seg-btn'));
   document.querySelectorAll('#sheet-rep-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('#sheet-rep-seg .seg-btn').forEach(b=>b.classList.remove('disabled'));
   document.querySelectorAll('#sheet-weekday-seg .seg-btn').forEach(b=>{b.classList.remove('active');b.classList.remove('disabled');});
   document.querySelectorAll('#sheet-variable-pts-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
-  document.querySelectorAll('#sheet-oneoff-pts-seg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+  document.getElementById('sheet-oneoff-pts').value='15';
   document.getElementById('sheet-overlay').classList.add('open');
   setTimeout(()=>document.getElementById('sheet-name').focus(),100);
 }
@@ -1425,7 +1412,7 @@ function openEditSheet(e,id,freq){
   if(freqBtn) sheetSelectFreq(freqBtn,freq);
 
   if(freq==='one_off'){
-document.querySelectorAll('#sheet-oneoff-pts-seg .seg-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===String(chore.points_value||3)));
+    document.getElementById('sheet-oneoff-pts').value=chore.points_value||15;
   }
   if(freq==='occasional'||freq==='as_needed'){
     const pts=chore.points_value||(freq==='occasional'?10:3);
@@ -1512,11 +1499,9 @@ async function submitSheet(){
   const name=document.getElementById('sheet-name').value.trim();
   if(!name){showToast('Enter a chore name');return;}
   const freq=sheetSelectedFreq;
-  if(!freq){showToast('Select how often first');return;}
 
   if(freq==='one_off'){
-const ptsBtn=document.querySelector('#sheet-oneoff-pts-seg .seg-btn.active');
-const pts=ptsBtn?parseInt(ptsBtn.textContent.trim()):3;
+    const pts=parseInt(document.getElementById('sheet-oneoff-pts').value)||15;
     try{
       if(sheetEditingId){
         await api('chores?id=eq.'+sheetEditingId,'PATCH',{name,frequency:'one_off',points_value:pts});
