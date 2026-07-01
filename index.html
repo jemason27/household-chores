@@ -855,15 +855,15 @@ function renderWeekly(){
   let html='<div class="card">';
 
   html+='<div class="week-sticky-days">';
-  html+='<div class="week-sticky-days-row">';
-  weekDates.forEach(d=>{
-    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
-  });
-  html+='</div>';
   html+='<div class="week-sticky-legend">';
   html+='<span class="legend-item"><span class="legend-box due"></span> Due day</span>';
   html+='<span class="legend-item"><span class="legend-box done"></span> Completed</span>';
   html+='<span class="legend-item"><span class="legend-box future"></span> Future</span>';
+  html+='</div>';
+  html+='<div class="week-sticky-days-row">';
+  weekDates.forEach(d=>{
+    html+=`<span>${DAY_NAMES[d.getDay()]} ${d.getDate()}</span>`;
+  });
   html+='</div>';
   html+='</div>';
 
